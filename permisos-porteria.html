@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Portería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-400:#94a3b8;
+  --slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;
+  --gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;
+  --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-300:#93c5fd;--blue-900:#1e3a8a;--blue-950:#172554;
+  --emerald-50:#ecfdf5;--emerald-100:#d1fae5;--emerald-200:#a7f3d0;--emerald-500:#10b981;--emerald-600:#059669;--emerald-700:#047857;--emerald-800:#065f46;
+  --red-50:#fef2f2;--red-100:#fee2e2;--red-200:#fecaca;--red-500:#ef4444;--red-600:#dc2626;--red-700:#b91c1c;--red-800:#991b1b;
+  --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-200:#fde68a;--amber-500:#f59e0b;--amber-700:#b45309;--amber-800:#92400e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--slate-50);color:var(--slate-800);
+  font-family:Inter,"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+body::selection,::selection{background:var(--blue-900);color:#fff}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+/* Header (6.12) */
+.header{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:40;
+  padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}
+.header .titulo{font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--blue-900);text-transform:uppercase}
+.header .der{font-size:11px;color:var(--gray-400);text-align:right;line-height:1.35}
+
+/* Tarjeta (6.2) */
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);padding:20px}
+.card-h{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-100);padding-bottom:12px;margin-bottom:18px}
+.card-h .ico{padding:8px;background:var(--blue-50);color:var(--blue-900);border-radius:12px;display:flex}
+.card-h h3{font-size:13px;font-weight:700;color:var(--slate-800);text-transform:uppercase;letter-spacing:.05em;margin:0}
+.card-h p{font-size:11px;color:var(--gray-400);margin:2px 0 0}
+
+/* Micro-etiqueta (2.2) */
+.label{font-size:10px;font-weight:700;color:var(--slate-400);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:6px;display:block}
+
+/* Botones (6.1) */
+.btn{background:var(--blue-900);color:#fff;border:none;border-radius:8px;padding:0 16px;height:36px;
+  font-family:inherit;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;gap:6px;transition:background .2s}
+.btn:hover{background:var(--blue-950)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-out{background:#fff;color:var(--slate-700);border:1px solid var(--gray-200)}
+.btn-out:hover{background:var(--slate-50)}
+.btn-ok{background:var(--emerald-700)}.btn-ok:hover{background:var(--emerald-800)}
+.btn-no{background:var(--red-700)}.btn-no:hover{background:var(--red-800)}
+/* Escala táctil para planta */
+.btn-xl{height:56px;width:100%;font-size:13px;border-radius:12px}
+
+/* Badge (6.4) */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:9999px;
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.badge i{width:6px;height:6px;border-radius:9999px;display:block}
+.b-ok{background:var(--emerald-100);color:var(--emerald-800)} .b-ok i{background:var(--emerald-500)}
+.b-pen{background:var(--amber-100);color:var(--amber-800);border:1px solid var(--amber-200)} .b-pen i{background:var(--amber-500)}
+.b-no{background:var(--red-100);color:var(--red-800)} .b-no i{background:var(--red-500)}
+.b-neu{background:var(--slate-100);color:var(--slate-500)} .b-neu i{background:var(--slate-400)}
+.b-info{background:var(--blue-100);color:var(--blue-900)} .b-info i{background:var(--blue-900)}
+
+/* Inputs (6.6) */
+input,select,textarea{width:100%;font-family:inherit;font-size:15px;font-weight:600;color:var(--slate-800);
+  background:var(--slate-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 12px;min-height:48px;
+  outline:none;transition:box-shadow .15s,border-color .15s}
+input:focus,select:focus,textarea:focus{background:#fff;border-color:var(--blue-900);box-shadow:0 0 0 1px var(--blue-900)}
+input::placeholder,textarea::placeholder{font-style:italic;font-weight:400;color:var(--slate-400)}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue-900);outline-offset:2px}
+.campo{margin-bottom:16px}
+
+/* Avisos */
+.nota{border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.55}
+.n-amb{background:var(--amber-50);border:1px solid var(--amber-200);color:var(--amber-800)}
+.n-red{background:var(--red-50);border:1px solid var(--red-200);color:var(--red-800)}
+.n-blu{background:var(--blue-50);border:1px solid var(--blue-200);color:var(--blue-900)}
+.n-neu{background:var(--slate-50);border:1px solid var(--gray-200);color:var(--slate-600)}
+.nota b{display:block;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:10px;margin-bottom:3px}
+.err{color:var(--red-700);font-size:12px;font-weight:600;margin-top:8px;display:none}
+.err.on{display:block}
+.demo{margin-top:16px;font-size:11px;color:var(--gray-400);border:1px dashed var(--gray-300);
+  border-radius:12px;padding:12px;line-height:1.6;background:#fff}
+.demo .mono{color:var(--slate-700);font-weight:700}
+.paso{display:none}.paso.on{display:block}
+@media (prefers-reduced-motion:no-preference){
+  .paso.on{animation:ap .18s ease-out}@keyframes ap{from{opacity:0}to{opacity:1}}
+}
+
+.marco{max-width:460px;margin:0 auto;padding:14px 14px 44px}
+.buscador{position:sticky;top:60px;z-index:30;background:var(--slate-50);padding:12px 0 10px;margin-top:-4px}
+.buscador input{font-size:18px;min-height:58px;border-width:2px;border-color:var(--slate-800);background:#fff;
+  border-radius:14px;font-weight:700}
+.buscador input:focus{border-color:var(--blue-900)}
+.secc{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 10px}
+.secc .label{margin:0}
+.secc .n{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:800;color:var(--slate-900);
+  background:var(--slate-100);border-radius:9999px;padding:2px 10px}
+.ficha{margin-bottom:12px;padding:18px}
+.ficha.fuera{border-left:4px solid var(--blue-900)}
+.ficha.tarde{border-left:4px solid var(--amber-500)}
+.per{display:flex;gap:14px;align-items:flex-start}
+.ini{width:52px;height:52px;flex:none;border-radius:14px;background:var(--blue-50);color:var(--blue-900);
+  display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800}
+.per-nom{font-size:18px;font-weight:800;color:var(--slate-900);margin:0;line-height:1.2}
+.per-ced{font-size:15px;font-weight:700;color:var(--slate-700);margin:3px 0 0;letter-spacing:.02em}
+.per-area{font-size:11px;font-weight:700;color:var(--slate-400);text-transform:uppercase;
+  letter-spacing:.08em;margin:2px 0 0}
+.horas{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--slate-50);
+  border:1px solid var(--gray-100);border-radius:12px;padding:12px;margin-top:14px}
+.horas .label{margin-bottom:3px;font-size:9px}
+.horas .v{font-size:19px;font-weight:800;color:var(--slate-900)}
+.vacio{text-align:center;color:var(--slate-400);font-style:italic;font-size:13px;padding:28px 20px;
+  background:#fff;border:1px dashed var(--gray-300);border-radius:16px}
+.conf-nom{font-size:26px;font-weight:800;color:var(--slate-900);margin:0;line-height:1.15}
+.conf-ced{font-size:20px;font-weight:700;color:var(--slate-500);margin:4px 0 18px}
+.dato{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;
+  border-top:1px solid var(--gray-100);font-size:12px;color:var(--slate-500);font-weight:600}
+.dato:last-of-type{border-bottom:1px solid var(--gray-100)}
+.dato .v{font-family:"JetBrains Mono",monospace;font-weight:800;font-size:15px;color:var(--slate-900)}
+.rueda{position:relative;display:flex;justify-content:center;gap:4px;height:230px;overflow:hidden;
+  border:1px solid var(--gray-200);border-radius:16px;background:#fff;margin-top:8px}
+.banda{position:absolute;top:92px;left:10px;right:10px;height:46px;background:var(--blue-50);
+  border-radius:12px;pointer-events:none}
+.rueda::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0) 36%,rgba(255,255,255,0) 64%,#fff 100%)}
+.col{height:230px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;
+  -ms-overflow-style:none;text-align:center;flex:none;position:relative;z-index:2;padding:92px 0}
+.col::-webkit-scrollbar{display:none}
+.col .it{height:46px;line-height:46px;scroll-snap-align:center;font-size:26px;font-weight:700;
+  color:var(--slate-300,#cbd5e1);transition:color .12s}
+.col .it.sel{color:var(--blue-900);font-weight:800}
+.col.hh,.col.mm{width:80px}.col.ap{width:88px}
+.col.ap .it{font-size:20px}
+.desfase{display:none;margin-top:12px;font-size:11px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--amber-700);background:var(--amber-50);border:1px solid var(--amber-200);
+  border-radius:9999px;padding:7px 12px;text-align:center}
+.hecho{background:var(--slate-900);color:#fff;border-radius:14px;padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;font-weight:600}
+.hecho b{color:#fff;font-weight:800}
+.hecho button{background:none;border:1px solid #475569;color:#fff;border-radius:8px;padding:9px 13px;
+  font-family:inherit;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.08em;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="titulo">Portería</span>
+  <span class="der" id="turno"></span>
+</div>
+
+<div class="marco">
+
+<section class="paso on" id="paso-login">
+  <div class="card">
+    <div class="card-h"><span class="ico">&#128737;</span>
+      <div><h3>Vigilancia</h3><p>La sesión queda abierta durante el turno.</p></div></div>
+    <div class="campo"><label class="label" for="correo">Usuario</label>
+      <input id="correo" type="email" autocomplete="username" placeholder="porteria@empresa.com"></div>
+    <div class="campo"><label class="label" for="clave">Contraseña</label>
+      <input id="clave" type="password" autocomplete="current-password"></div>
+    <p class="err" id="error-login"></p>
+    <button class="btn btn-xl" id="btn-entrar">Entrar</button>
+  </div>
+  <div class="demo">Prototipo. Entra con cualquier usuario y contraseña. Reloj simulado: <span class="mono">14:20</span>.</div>
+</section>
+
+<section class="paso" id="paso-tablero">
+  <div class="buscador">
+    <input id="q" type="search" inputmode="search" placeholder="Buscar por nombre o cédula"
+      oninput="pintar()" autocomplete="off">
+  </div>
+
+  <div id="aviso-hecho"></div>
+
+  <div class="secc"><span class="label">Autorizados para salir</span><span class="n" id="n-salir">0</span></div>
+  <div id="lista-salir"></div>
+
+  <div class="secc"><span class="label">Fuera de la empresa</span><span class="n" id="n-fuera">0</span></div>
+  <div id="lista-fuera"></div>
+
+  <div id="conexion" style="margin-top:18px"></div>
+  <div class="demo">Simula el corte de señal para ver la cola de registros.<br>
+    <button class="btn btn-out" style="margin-top:8px" onclick="alternarConexion()" id="btn-conexion">Simular sin conexión</button></div>
+
+  <button class="btn btn-out btn-xl" style="margin-top:14px" onclick="salir()">Cerrar sesión</button>
+</section>
+
+<section class="paso" id="paso-confirmar">
+  <div class="card">
+    <p class="label" id="conf-accion">Registrar salida</p>
+    <p class="conf-nom" id="conf-nombre"></p>
+    <p class="conf-ced mono" id="conf-cedula"></p>
+
+    <div class="dato"><span>Área</span><span class="v" id="conf-area"></span></div>
+    <div class="dato"><span id="conf-rot-hora">Permiso autorizado</span><span class="v" id="conf-hora"></span></div>
+
+    <p class="label" style="margin:20px 0 0" id="conf-rot-ahora">Hora de salida</p>
+    <div class="rueda">
+      <div class="banda"></div>
+      <div class="col hh" id="r-hh"></div>
+      <div class="col mm" id="r-mm"></div>
+      <div class="col ap" id="r-ap"></div>
+    </div>
+    <p class="desfase" id="desfase"></p>
+
+    <button class="btn btn-ok btn-xl" id="btn-confirmar" style="margin-top:16px">Confirmar</button>
+    <button class="btn btn-out btn-xl" style="margin-top:10px" onclick="ir('paso-tablero')">Cancelar</button>
+  </div>
+</section>
+
+</div>
+<script>
+const AHORA = "14:20";           // reloj simulado, para que los estados sean estables
+let sinConexion = false, cola = 0;
+let sel = null, accion = null, ultimo = null;
+
+let gente = [
+  { id:1, nombre:"Juliana Pérez Ramírez",  cedula:"1020304050", area:"Producción",    desde:"14:00", hasta:"15:15", estado:"aprobado" },
+  { id:2, nombre:"María Fernanda Loaiza",  cedula:"1017889900", area:"Producción",    desde:"07:00", hasta:"11:00", estado:"aprobado" },
+  { id:3, nombre:"Diana Marcela Toro",     cedula:"1032445566", area:"Calidad",       desde:"15:00", hasta:"16:00", estado:"aprobado" },
+  { id:4, nombre:"Wilson Gutiérrez Ríos",  cedula:"79554433",   area:"Producción",    desde:"16:30", hasta:"17:15", estado:"aprobado" },
+  { id:5, nombre:"Óscar Iván Betancur",    cedula:"71223344",   area:"Mantenimiento", desde:"13:05", hasta:"14:05", estado:"en_curso", salioA:"13:05" },
+  { id:6, nombre:"Sandra Milena Quintero", cedula:"1088776655", area:"Logística",     desde:"14:00", hasta:"15:30", estado:"en_curso", salioA:"14:02" }
+];
+
+const $ = id => document.getElementById(id);
+const err = (id,m) => { const e=$(id); e.textContent=m; e.classList.toggle("on", !!m); };
+const minutos = h => { const [a,b] = h.split(":").map(Number); return a*60+b; };
+const iniciales = n => n.split(" ").filter(p => p.length > 2).slice(0,2).map(p => p[0]).join("");
+const normalizar = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+function ir(id){
+  document.querySelectorAll(".paso").forEach(p => p.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo(0,0);
+}
+
+$("btn-entrar").onclick = () => {
+  if(!$("correo").value.trim() || !$("clave").value) return err("error-login","Escribe el usuario y la contraseña.");
+  err("error-login","");
+  $("turno").textContent = "Turno tarde";
+  pintar(); ir("paso-tablero");
+};
+
+function filtrar(lista){
+  const q = normalizar($("q").value.trim());
+  if(!q) return lista;
+  return lista.filter(p => normalizar(p.nombre).includes(q) || p.cedula.includes(q));
+}
+
+function ficha(p){
+  const tarde = p.estado === "en_curso" && minutos(AHORA) > minutos(p.hasta);
+  const fuera = p.estado === "en_curso";
+  return `<div class="card ficha ${tarde ? "tarde" : fuera ? "fuera" : ""}">
+    <div class="per">
+      <span class="ini mono">${iniciales(p.nombre)}</span>
+      <div>
+        <p class="per-nom">${p.nombre}</p>
+        <p class="per-ced mono">C.C. ${p.cedula}</p>
+        <p class="per-area">${p.area}</p>
+      </div>
+    </div>
+    <div class="horas">
+      ${fuera
+        ? `<div><span class="label">Salió</span><span class="v mono">${p.salioA}</span></div>
+           <div><span class="label">Debe regresar</span><span class="v mono">${p.hasta}</span></div>`
+        : `<div><span class="label">Salida</span><span class="v mono">${p.desde}</span></div>
+           <div><span class="label">Regreso</span><span class="v mono">${p.hasta}</span></div>`}
+    </div>
+    ${tarde ? '<span class="badge b-pen" style="margin-top:12px"><i></i>Pasado de la hora</span>' : ''}
+    <button class="btn ${fuera ? "" : "btn-ok"} btn-xl" style="margin-top:14px" onclick="abrir(${p.id})">
+      ${fuera ? "Registrar regreso" : "Registrar salida"}</button>
+  </div>`;
+}
+
+function pintar(){
+  const porSalir = filtrar(gente.filter(p => p.estado === "aprobado"));
+  const fuera    = filtrar(gente.filter(p => p.estado === "en_curso"));
+  const hayQ = !!$("q").value.trim();
+
+  $("n-salir").textContent = porSalir.length;
+  $("n-fuera").textContent = fuera.length;
+  $("lista-salir").innerHTML = porSalir.length ? porSalir.map(ficha).join("")
+    : '<p class="vacio">' + (hayQ ? "Nadie con ese dato tiene permiso para salir hoy." : "Nadie pendiente de salir.") + '</p>';
+  $("lista-fuera").innerHTML = fuera.length ? fuera.map(ficha).join("")
+    : '<p class="vacio">' + (hayQ ? "Sin coincidencias." : "Todos han regresado.") + '</p>';
+}
+
+/* ── Rueda de hora ──────────────────────────────────────────────
+   Viene predeterminada con la hora del permiso: el vigilante casi
+   siempre solo confirma, y ajusta con el pulgar cuando hay desfase. */
+const H12 = Array.from({length:12},(_,i)=>String(i+1));
+const MIN = Array.from({length:60},(_,i)=>String(i).padStart(2,"0"));
+const AP  = ["AM","PM"];
+const ALTO = 46;
+
+function llenar(col, valores){
+  col.innerHTML = valores.map(v => '<div class="it mono">' + v + '</div>').join("");
+  col.onscroll = () => { clearTimeout(col.t); col.t = setTimeout(()=>marcar(col), 60); };
+}
+function fijar(col, valores, valor){
+  col.scrollTop = Math.max(0, valores.indexOf(valor)) * ALTO;
+  marcar(col);
+}
+const indice = col => Math.round(col.scrollTop / ALTO);
+function marcar(col){
+  const i = indice(col);
+  [...col.children].forEach((el,j) => el.classList.toggle("sel", j === i));
+  desfase();
+}
+function leerRueda(){
+  let h = +H12[indice($("r-hh"))];
+  const m = MIN[indice($("r-mm"))], ap = AP[indice($("r-ap"))];
+  if(ap === "PM" && h !== 12) h += 12;
+  if(ap === "AM" && h === 12) h = 0;
+  return String(h).padStart(2,"0") + ":" + m;
+}
+function a12(h24){
+  const [h,m] = h24.split(":").map(Number);
+  return { h:String(h % 12 === 0 ? 12 : h % 12), m:String(m).padStart(2,"0"), ap:h >= 12 ? "PM" : "AM" };
+}
+function desfase(){
+  if(!sel) return;
+  const ref = accion === "salida" ? sel.desde : sel.hasta;
+  const d = minutos(leerRueda()) - minutos(ref);
+  const el = $("desfase");
+  el.textContent = !d ? "" : Math.abs(d) + " min " + (d > 0 ? "después" : "antes") + " de lo autorizado (" + ref + ")";
+  el.style.display = d ? "block" : "none";
+}
+
+function abrir(id){
+  sel = gente.find(p => p.id === id);
+  accion = sel.estado === "aprobado" ? "salida" : "regreso";
+
+  $("conf-accion").textContent = accion === "salida" ? "Registrar salida" : "Registrar regreso";
+  $("conf-nombre").textContent = sel.nombre;
+  $("conf-cedula").textContent = "C.C. " + sel.cedula;
+  $("conf-area").textContent = sel.area;
+  $("conf-rot-hora").textContent = accion === "salida" ? "Permiso autorizado" : "Salió a las";
+  $("conf-hora").textContent = accion === "salida" ? sel.desde + " a " + sel.hasta : sel.salioA;
+  $("conf-rot-ahora").textContent = accion === "salida" ? "Hora de salida" : "Hora de regreso";
+  $("btn-confirmar").textContent = accion === "salida" ? "Confirmar salida" : "Confirmar regreso";
+  $("btn-confirmar").className = "btn btn-xl " + (accion === "salida" ? "btn-ok" : "");
+
+  ir("paso-confirmar");
+
+  // La posición solo se puede fijar con la sección ya visible.
+  const t = a12(accion === "salida" ? sel.desde : sel.hasta);
+  requestAnimationFrame(()=>{
+    llenar($("r-hh"), H12); llenar($("r-mm"), MIN); llenar($("r-ap"), AP);
+    fijar($("r-hh"), H12, t.h); fijar($("r-mm"), MIN, t.m); fijar($("r-ap"), AP, t.ap);
+  });
+}
+
+$("btn-confirmar").onclick = () => {
+  const hora = leerRueda();
+  if(accion === "salida"){ sel.estado = "en_curso"; sel.salioA = hora; }
+  else { gente = gente.filter(p => p.id !== sel.id); }
+  ultimo = { persona: sel, accion, snapshot: JSON.parse(JSON.stringify(sel)), hora };
+  if(sinConexion){ cola++; estadoConexion(); }
+  pintar(); avisoHecho(); ir("paso-tablero");
+};
+
+// Deshacer: un toque equivocado en un celular no debería ser definitivo.
+function avisoHecho(){
+  const n = ultimo.persona.nombre.split(" ");
+  $("aviso-hecho").innerHTML = `<div class="hecho">
+    <span>${ultimo.accion === "salida" ? "Salida" : "Regreso"} de ${n[0]} ${n[2] || ""} · <b class="mono">${ultimo.hora}</b></span>
+    <button onclick="deshacer()">Deshacer</button></div>`;
+  clearTimeout(window.tH);
+  window.tH = setTimeout(()=>{ $("aviso-hecho").innerHTML = ""; ultimo = null; }, 12000);
+}
+
+function deshacer(){
+  if(!ultimo) return;
+  if(ultimo.accion === "salida"){
+    const p = gente.find(x => x.id === ultimo.persona.id);
+    p.estado = "aprobado"; delete p.salioA;
+  }else{
+    const p = ultimo.snapshot; p.estado = "en_curso"; gente.push(p);
+  }
+  if(sinConexion && cola > 0){ cola--; estadoConexion(); }
+  ultimo = null; $("aviso-hecho").innerHTML = ""; pintar();
+}
+
+function alternarConexion(){
+  sinConexion = !sinConexion;
+  if(!sinConexion) cola = 0;
+  $("btn-conexion").textContent = sinConexion ? "Restablecer la conexión" : "Simular sin conexión";
+  estadoConexion();
+}
+
+function estadoConexion(){
+  $("conexion").innerHTML = sinConexion
+    ? '<span class="badge b-pen"><i></i>' + (cola ? "Sin conexión · " + cola + (cola === 1 ? " registro en cola" : " registros en cola") : "Sin conexión · se guarda en el celular") + '</span>'
+    : '<span class="badge b-ok"><i></i>Conectado · lista actualizada</span>';
+}
+
+function salir(){ $("correo").value = ""; $("clave").value = ""; $("q").value = ""; ir("paso-login"); }
+estadoConexion();
+
+</script>
+</body>
+</html>

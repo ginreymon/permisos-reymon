@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8fafc">
+<title>Aprobaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-400:#94a3b8;
+  --slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;
+  --gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;
+  --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-300:#93c5fd;--blue-900:#1e3a8a;--blue-950:#172554;
+  --emerald-50:#ecfdf5;--emerald-100:#d1fae5;--emerald-200:#a7f3d0;--emerald-500:#10b981;--emerald-600:#059669;--emerald-700:#047857;--emerald-800:#065f46;
+  --red-50:#fef2f2;--red-100:#fee2e2;--red-200:#fecaca;--red-500:#ef4444;--red-600:#dc2626;--red-700:#b91c1c;--red-800:#991b1b;
+  --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-200:#fde68a;--amber-500:#f59e0b;--amber-700:#b45309;--amber-800:#92400e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--slate-50);color:var(--slate-800);
+  font-family:Inter,"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+body::selection,::selection{background:var(--blue-900);color:#fff}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+/* Header (6.12) */
+.header{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:40;
+  padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}
+.header .titulo{font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--blue-900);text-transform:uppercase}
+.header .der{font-size:11px;color:var(--gray-400);text-align:right;line-height:1.35}
+
+/* Tarjeta (6.2) */
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);padding:20px}
+.card-h{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-100);padding-bottom:12px;margin-bottom:18px}
+.card-h .ico{padding:8px;background:var(--blue-50);color:var(--blue-900);border-radius:12px;display:flex}
+.card-h h3{font-size:13px;font-weight:700;color:var(--slate-800);text-transform:uppercase;letter-spacing:.05em;margin:0}
+.card-h p{font-size:11px;color:var(--gray-400);margin:2px 0 0}
+
+/* Micro-etiqueta (2.2) */
+.label{font-size:10px;font-weight:700;color:var(--slate-400);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:6px;display:block}
+
+/* Botones (6.1) */
+.btn{background:var(--blue-900);color:#fff;border:none;border-radius:8px;padding:0 16px;height:36px;
+  font-family:inherit;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;gap:6px;transition:background .2s}
+.btn:hover{background:var(--blue-950)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-out{background:#fff;color:var(--slate-700);border:1px solid var(--gray-200)}
+.btn-out:hover{background:var(--slate-50)}
+.btn-ok{background:var(--emerald-700)}.btn-ok:hover{background:var(--emerald-800)}
+.btn-no{background:var(--red-700)}.btn-no:hover{background:var(--red-800)}
+/* Escala táctil para planta */
+.btn-xl{height:56px;width:100%;font-size:13px;border-radius:12px}
+
+/* Badge (6.4) */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:9999px;
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.badge i{width:6px;height:6px;border-radius:9999px;display:block}
+.b-ok{background:var(--emerald-100);color:var(--emerald-800)} .b-ok i{background:var(--emerald-500)}
+.b-pen{background:var(--amber-100);color:var(--amber-800);border:1px solid var(--amber-200)} .b-pen i{background:var(--amber-500)}
+.b-no{background:var(--red-100);color:var(--red-800)} .b-no i{background:var(--red-500)}
+.b-neu{background:var(--slate-100);color:var(--slate-500)} .b-neu i{background:var(--slate-400)}
+.b-info{background:var(--blue-100);color:var(--blue-900)} .b-info i{background:var(--blue-900)}
+
+/* Inputs (6.6) */
+input,select,textarea{width:100%;font-family:inherit;font-size:15px;font-weight:600;color:var(--slate-800);
+  background:var(--slate-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 12px;min-height:48px;
+  outline:none;transition:box-shadow .15s,border-color .15s}
+input:focus,select:focus,textarea:focus{background:#fff;border-color:var(--blue-900);box-shadow:0 0 0 1px var(--blue-900)}
+input::placeholder,textarea::placeholder{font-style:italic;font-weight:400;color:var(--slate-400)}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue-900);outline-offset:2px}
+.campo{margin-bottom:16px}
+
+/* Avisos */
+.nota{border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.55}
+.n-amb{background:var(--amber-50);border:1px solid var(--amber-200);color:var(--amber-800)}
+.n-red{background:var(--red-50);border:1px solid var(--red-200);color:var(--red-800)}
+.n-blu{background:var(--blue-50);border:1px solid var(--blue-200);color:var(--blue-900)}
+.n-neu{background:var(--slate-50);border:1px solid var(--gray-200);color:var(--slate-600)}
+.nota b{display:block;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:10px;margin-bottom:3px}
+.err{color:var(--red-700);font-size:12px;font-weight:600;margin-top:8px;display:none}
+.err.on{display:block}
+.demo{margin-top:16px;font-size:11px;color:var(--gray-400);border:1px dashed var(--gray-300);
+  border-radius:12px;padding:12px;line-height:1.6;background:#fff}
+.demo .mono{color:var(--slate-700);font-weight:700}
+.paso{display:none}.paso.on{display:block}
+@media (prefers-reduced-motion:no-preference){
+  .paso.on{animation:ap .18s ease-out}@keyframes ap{from{opacity:0}to{opacity:1}}
+}
+
+.marco{max-width:460px;margin:0 auto;padding:16px 14px 44px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--slate-600)}
+.tabs{display:flex;border-bottom:1px solid var(--gray-200);margin-bottom:16px;background:#fff;
+  border-radius:12px 12px 0 0}
+.tabs button{flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:14px 8px;
+  font-family:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--slate-500);cursor:pointer;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;gap:7px}
+.tabs button:hover{color:var(--blue-900)}
+.tabs button[aria-pressed=true]{color:var(--blue-900);border-bottom-color:var(--blue-900);font-weight:800}
+.cont{background:var(--amber-500);color:#fff;font-family:"JetBrains Mono",monospace;font-size:10px;
+  font-weight:800;border-radius:9999px;padding:2px 7px}
+.tabs button[aria-pressed=true] .cont{background:var(--blue-900)}
+.sol{margin-bottom:12px;padding:18px}
+.sol-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+.sol-nom{font-size:16px;font-weight:700;color:var(--slate-900);margin:0;line-height:1.25}
+.sol-ced{font-size:11px;font-weight:600;color:var(--slate-500);margin:2px 0 0}
+.sol-horas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--slate-50);
+  border:1px solid var(--gray-100);border-radius:12px;padding:12px 10px}
+.sol-horas .label{margin-bottom:3px;font-size:9px}
+.sol-horas .v{font-size:14px;font-weight:800;color:var(--slate-900)}
+.sol-hist{font-size:11px;color:var(--slate-500);border-left:2px solid var(--gray-200);padding-left:10px;
+  margin:12px 0 0}
+.sol-rad{font-size:11px;color:var(--slate-400);margin:6px 0 0}
+.ver{display:block;width:100%;background:none;border:none;color:var(--blue-900);font-family:inherit;
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:12px 0 0;cursor:pointer}
+.vacio{text-align:center;color:var(--slate-400);font-style:italic;font-size:13px;padding:40px 20px;
+  background:#fff;border:1px solid var(--gray-200);border-radius:16px}
+.det-nom{font-size:22px;font-weight:800;color:var(--slate-900);margin:0;line-height:1.15}
+.det-sub{font-size:11px;color:var(--slate-400);margin:3px 0 16px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.resumen{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
+.resumen th{text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--slate-400);padding:11px 0;width:42%;vertical-align:top}
+.resumen td{text-align:right;font-weight:700;color:var(--slate-800);padding:11px 0}
+.resumen tr+tr th,.resumen tr+tr td{border-top:1px solid var(--gray-100)}
+.hist-det{font-size:11px;color:var(--slate-500);border-left:2px solid var(--gray-200);padding-left:10px;
+  margin:0 0 16px}
+.soporte{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--blue-900);
+  background:var(--blue-50);border:1px solid var(--blue-200);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.soporte .mini{width:38px;height:38px;flex:none;border-radius:8px;border:1px solid var(--blue-200);
+  background:repeating-linear-gradient(45deg,#fff,#fff 5px,var(--blue-50) 5px,var(--blue-50) 10px)}
+.opciones{border:1px solid var(--gray-200);border-radius:12px;overflow:hidden;margin-bottom:16px;background:#fff}
+.opcion{display:flex;gap:12px;align-items:flex-start;padding:14px;border-bottom:1px solid var(--gray-100);cursor:pointer}
+.opcion:last-child{border-bottom:none}
+.opcion:hover{background:var(--slate-50)}
+.opcion input{width:20px;height:20px;min-height:0;flex:none;margin:1px 0 0;accent-color:var(--blue-900)}
+.opcion .t{font-size:13px;font-weight:700;color:var(--slate-800)}
+.opcion .t small{display:block;font-weight:500;color:var(--slate-400);font-size:11px;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="titulo">Aprobaciones</span>
+  <span class="der" id="quien"></span>
+</div>
+
+<div class="marco">
+
+<section class="paso on" id="paso-login">
+  <div class="card">
+    <div class="card-h"><span class="ico">&#128274;</span>
+      <div><h3>Ingreso</h3><p>Usa el correo del cargo, no el personal.</p></div></div>
+    <div class="campo"><label class="label" for="correo">Correo corporativo</label>
+      <input id="correo" type="email" autocomplete="username" placeholder="coordinador.area@empresa.com"></div>
+    <div class="campo"><label class="label" for="clave">Contraseña</label>
+      <input id="clave" type="password" autocomplete="current-password"></div>
+    <p class="err" id="error-login"></p>
+    <button class="btn btn-xl" id="btn-entrar">Entrar</button>
+  </div>
+  <div class="demo">Prototipo. Entra con cualquier correo y contraseña.</div>
+</section>
+
+<section class="paso" id="paso-bandeja">
+  <p class="det-sub" id="sub-bandeja" style="margin-bottom:12px"></p>
+  <div class="tabs">
+    <button id="tab-pend" aria-pressed="true" onclick="filtrar('pendiente')">Pendientes<span class="cont" id="cont-pend">4</span></button>
+    <button id="tab-res" aria-pressed="false" onclick="filtrar('resueltos')">Resueltos</button>
+  </div>
+  <div id="bandeja"></div>
+  <button class="btn btn-out btn-xl" style="margin-top:16px" onclick="salir()">Cerrar sesión</button>
+</section>
+
+<section class="paso" id="paso-detalle">
+  <div class="card">
+    <p class="det-nom" id="det-nombre"></p>
+    <p class="det-sub" id="det-sub"></p>
+
+    <table class="resumen">
+      <tr><th>Cédula</th><td class="mono" id="det-cedula"></td></tr>
+      <tr><th>Tipo</th><td id="det-tipo"></td></tr>
+      <tr><th>Duración</th><td class="mono" id="det-duracion"></td></tr>
+      <tr><th>Fecha</th><td class="mono" id="det-fecha"></td></tr>
+      <tr><th>Hora de salida</th><td class="mono" id="det-salida"></td></tr>
+      <tr><th>Hora de regreso</th><td class="mono" id="det-regreso"></td></tr>
+      <tr><th>Radicado</th><td id="det-radicado"></td></tr>
+    </table>
+    <p class="hist-det" id="det-historial"></p>
+
+    <div class="nota n-neu" id="det-obs" style="margin-bottom:12px;display:none">
+      <b>Observaciones del colaborador</b><span id="det-obs-txt"></span></div>
+    <div class="soporte" id="det-soporte" style="display:none"><span class="mini"></span>Ver documento soporte</div>
+    <div class="nota n-red" id="det-falta-sop" style="margin-bottom:12px;display:none">
+      <b>Sin documento soporte</b>Este permiso lo exige. El colaborador tiene hasta 24 horas después del
+      regreso para subirlo; si no lo hace, Talento Humano descontará el tiempo del salario.</div>
+    <div class="nota n-amb" id="det-alerta" style="margin-bottom:12px;display:none">
+      <b>Permiso solapado</b><span id="det-alerta-txt"></span></div>
+    <div class="nota n-blu" id="det-porteria" style="margin-bottom:12px;display:none">
+      <b>Registro en portería</b><span id="det-real"></span></div>
+
+    <div id="det-decidido" style="display:none">
+      <div id="det-estado" style="margin:14px 0 12px"></div>
+      <div class="nota n-neu" id="det-comentario-box" style="margin-bottom:12px;display:none">
+        <b>Tu comentario</b><span id="det-comentario"></span></div>
+    </div>
+
+    <div id="det-acciones">
+      <div class="duo" style="margin-top:16px">
+        <button class="btn btn-ok btn-xl" onclick="abrirAprobar()">Aprobar</button>
+        <button class="btn btn-no btn-xl" onclick="abrirRechazar()">Rechazar</button>
+      </div>
+    </div>
+    <button class="btn btn-out btn-xl" style="margin-top:10px" onclick="ir('paso-bandeja')">Volver a la bandeja</button>
+  </div>
+</section>
+
+<section class="paso" id="paso-aprobar">
+  <div class="card">
+    <div class="card-h"><span class="ico">&#9989;</span>
+      <div><h3>Aprobar permiso</h3><p id="apr-sub"></p></div></div>
+
+    <div class="nota n-red" id="apr-falta-sop" style="display:none;margin-bottom:16px">
+      <b>Aún no ha subido el soporte</b>Este tipo de permiso lo exige. Tiene plazo hasta 24 horas después del regreso.</div>
+    <div class="nota n-amb" style="margin-bottom:16px">
+      <b>Esto no se puede revertir</b>Talento Humano definirá después si el tiempo se descuenta del salario.</div>
+
+    <div class="campo"><label class="label" for="apr-comentario">Comentario · opcional, lo verá el colaborador</label>
+      <textarea id="apr-comentario" placeholder="Ej. Avísale a tu líder de turno antes de salir."></textarea></div>
+
+    <button class="btn btn-ok btn-xl" onclick="confirmarAprobar()">Aprobar permiso</button>
+    <button class="btn btn-out btn-xl" style="margin-top:10px" onclick="ir('paso-detalle')">Volver</button>
+  </div>
+</section>
+
+<section class="paso" id="paso-rechazar">
+  <div class="card">
+    <div class="card-h"><span class="ico">&#10060;</span>
+      <div><h3>Rechazar permiso</h3><p id="rec-sub"></p></div></div>
+
+    <label class="label">Motivo del rechazo</label>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="motrec" value="No reconozco esta solicitud" checked>
+        <span class="t">No reconozco esta solicitud<small>El colaborador no me la pidió</small></span></label>
+      <label class="opcion"><input type="radio" name="motrec" value="No hay cubrimiento ese día">
+        <span class="t">No hay cubrimiento ese día<small>La operación no puede quedarse sin la persona</small></span></label>
+      <label class="opcion"><input type="radio" name="motrec" value="Falta el documento soporte">
+        <span class="t">Falta el documento soporte</span></label>
+      <label class="opcion"><input type="radio" name="motrec" value="Otro motivo">
+        <span class="t">Otro motivo</span></label>
+    </div>
+
+    <div class="campo"><label class="label" for="rec-comentario">Explícale al colaborador · obligatorio</label>
+      <textarea id="rec-comentario" placeholder="Sin esto, el colaborador no sabe qué corregir."></textarea></div>
+
+    <p class="err" id="error-rechazo"></p>
+    <button class="btn btn-no btn-xl" onclick="confirmarRechazar()">Rechazar permiso</button>
+    <button class="btn btn-out btn-xl" style="margin-top:10px" onclick="ir('paso-detalle')">Volver</button>
+  </div>
+</section>
+
+</div>
+<script>
+const AREA = "Producción";
+let vista = "pendiente", sel = null;
+
+const CON_SOPORTE = ["Permiso médico","Permiso por ARL","Permiso por actividades escolares"];
+const faltaSoporte = s => CON_SOPORTE.includes(s.tipo) && !s.soporte;
+
+let solicitudes = [
+  { id:1042, nombre:"Juliana Pérez Ramírez", cedula:"1020304050", tipo:"Permiso personal",
+    duracion:"1 h 15 min", fecha:"Hoy", salida:"14:00", regreso:"15:15", radicado:"Hace 20 minutos",
+    estado:"pendiente", observaciones:"Diligencia en el banco, vuelvo antes de las 4.", soporte:false,
+    alerta:"", hist:{ n:3, personal:2, medico:1, minutos:525 } },
+
+  { id:1041, nombre:"Andrés Camilo Ospina", cedula:"1094556677", tipo:"Permiso médico",
+    duracion:"3 h", fecha:"Mañana", salida:"07:00", regreso:"10:00", radicado:"Hace 1 hora",
+    estado:"pendiente", observaciones:"Cita de control en la EPS.", soporte:true,
+    alerta:"", hist:{ n:2, personal:0, medico:2, minutos:300 } },
+
+  { id:1040, nombre:"María Fernanda Loaiza", cedula:"1017889900", tipo:"Permiso por actividades escolares",
+    duracion:"4 h", fecha:"18 sep", salida:"07:00", regreso:"11:00", radicado:"Ayer, 5:12 p. m.",
+    estado:"pendiente", observaciones:"Entrega de boletines de mi hija.", soporte:false,
+    alerta:"", hist:{ n:1, personal:1, medico:0, minutos:60 } },
+
+  { id:1039, nombre:"Wilson Gutiérrez Ríos", cedula:"79554433", tipo:"Permiso por ARL",
+    duracion:"45 min", fecha:"Hoy", salida:"16:30", regreso:"17:15", radicado:"Hace 3 horas",
+    estado:"pendiente", observaciones:"", soporte:true,
+    alerta:"Wilson ya tiene un permiso aprobado para hoy, de 08:00 a 10:00.",
+    hist:{ n:0, personal:0, medico:0, minutos:0 } },
+
+  { id:1036, nombre:"Andrés Camilo Ospina", cedula:"1094556677", tipo:"Permiso médico",
+    duracion:"2 h", fecha:"28 ago", salida:"07:00", regreso:"09:00", salidaReal:"06:58",
+    regresoReal:"09:12", radicado:"27 ago", estado:"aprobado", observaciones:"", soporte:true,
+    alerta:"", comentario:"", hist:{ n:2, personal:0, medico:2, minutos:300 } },
+
+  { id:1035, nombre:"Juliana Pérez Ramírez", cedula:"1020304050", tipo:"Permiso personal",
+    duracion:"4 h", fecha:"19 ago", salida:"08:00", regreso:"12:00", radicado:"16 ago",
+    estado:"rechazado", observaciones:"", soporte:false, alerta:"",
+    comentario:"Esa semana tenemos inventario, hablemos para moverlo.",
+    hist:{ n:3, personal:2, medico:1, minutos:525 } }
+];
+
+const $ = id => document.getElementById(id);
+const err = (id,m) => { const e=$(id); e.textContent=m; e.classList.toggle("on", !!m); };
+const TEXTO = { aprobado:"Aprobado por ti", rechazado:"Rechazado por ti" };
+const CLASE = { aprobado:"b-ok", rechazado:"b-no" };
+
+function fmt(min){
+  const h = Math.floor(min/60), m = min%60;
+  if(h && m) return h + " h " + m + " min";
+  return h ? h + " h" : m + " min";
+}
+
+// Contexto de uso, no alerta: informa sin empujar a una decisión.
+function historialTexto(h){
+  if(!h || !h.n) return "Sin permisos en los últimos 60 días.";
+  const d = [];
+  if(h.personal) d.push(h.personal + (h.personal===1 ? " personal" : " personales"));
+  if(h.medico)   d.push(h.medico   + (h.medico===1   ? " médico"   : " médicos"));
+  return "Últimos 60 días: " + h.n + (h.n===1 ? " permiso" : " permisos") +
+         " (" + d.join(", ") + "), " + fmt(h.minutos) + ".";
+}
+
+function ir(id){
+  document.querySelectorAll(".paso").forEach(p => p.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo(0,0);
+}
+
+$("btn-entrar").onclick = () => {
+  if(!$("correo").value.trim() || !$("clave").value) return err("error-login","Escribe tu correo y contraseña.");
+  err("error-login","");
+  $("quien").textContent = "Coordinación de " + AREA;
+  pintar(); ir("paso-bandeja");
+};
+
+function filtrar(v){
+  vista = v;
+  $("tab-pend").setAttribute("aria-pressed", v === "pendiente");
+  $("tab-res").setAttribute("aria-pressed", v === "resueltos");
+  pintar();
+}
+
+const pendientes = () => solicitudes.filter(s => s.estado === "pendiente");
+
+function pintar(){
+  const n = pendientes().length;
+  $("cont-pend").textContent = n;
+  $("cont-pend").style.display = n ? "inline-flex" : "none";
+  $("sub-bandeja").textContent = AREA + " · " +
+    (n === 0 ? "sin solicitudes por responder" : n === 1 ? "1 persona esperando respuesta" : n + " personas esperando respuesta");
+
+  const items = vista === "pendiente" ? pendientes() : solicitudes.filter(s => s.estado !== "pendiente");
+  const c = $("bandeja");
+  if(!items.length){
+    c.innerHTML = '<p class="vacio">' + (vista === "pendiente"
+      ? "Nada pendiente. Todo el equipo está al día."
+      : "Todavía no has respondido ninguna solicitud.") + '</p>';
+    return;
+  }
+
+  c.innerHTML = items.map(s => `
+    <div class="card sol">
+      <div class="sol-top">
+        <div>
+          <p class="sol-nom">${s.nombre}</p>
+          <p class="sol-ced mono">C.C. ${s.cedula}</p>
+        </div>
+        <span class="badge b-info"><i></i>${s.tipo.replace("Permiso ","").replace("por ","")}</span>
+      </div>
+
+      <div class="sol-horas">
+        <div><span class="label">Fecha</span><span class="v mono">${s.fecha}</span></div>
+        <div><span class="label">Salida</span><span class="v mono">${s.salida}</span></div>
+        <div><span class="label">Regreso</span><span class="v mono">${s.regreso}</span></div>
+        <div><span class="label">Duración</span><span class="v mono">${s.duracion}</span></div>
+      </div>
+
+      ${faltaSoporte(s) ? '<div class="nota n-red" style="margin-top:12px"><b>Sin documento soporte</b>Puedes aprobarlo, pero tiene plazo de 24 h después del regreso para subirlo.</div>' : ''}
+      ${s.alerta ? '<div class="nota n-amb" style="margin-top:12px"><b>Permiso solapado</b>' + s.alerta + '</div>' : ''}
+
+      <p class="sol-hist">${historialTexto(s.hist)}</p>
+      <p class="sol-rad">Radicado ${s.radicado.toLowerCase()}</p>
+
+      ${s.estado === "pendiente"
+        ? `<div class="duo" style="margin-top:14px">
+             <button class="btn btn-ok btn-xl" onclick="abrir(${s.id},'aprobar')">Aprobar</button>
+             <button class="btn btn-no btn-xl" onclick="abrir(${s.id},'rechazar')">Rechazar</button>
+           </div>
+           <button class="ver" onclick="abrir(${s.id},'detalle')">Ver detalle</button>`
+        : `<div style="margin-top:14px">${'<span class="badge ' + CLASE[s.estado] + '"><i></i>' + TEXTO[s.estado] + '</span>'}</div>
+           <button class="ver" onclick="abrir(${s.id},'detalle')">Ver detalle</button>`}
+    </div>`).join("");
+}
+
+function abrir(id, destino){
+  sel = solicitudes.find(s => s.id === id);
+  pintarDetalle();
+  if(destino === "aprobar") abrirAprobar();
+  else if(destino === "rechazar") abrirRechazar();
+  else ir("paso-detalle");
+}
+
+function pintarDetalle(){
+  const s = sel;
+  $("det-nombre").textContent = s.nombre;
+  $("det-sub").textContent = "Permiso N.º " + s.id + " · " + AREA;
+  $("det-cedula").textContent = s.cedula;
+  $("det-tipo").textContent = s.tipo;
+  $("det-duracion").textContent = s.duracion;
+  $("det-fecha").textContent = s.fecha;
+  $("det-salida").textContent = s.salida;
+  $("det-regreso").textContent = s.regreso;
+  $("det-radicado").textContent = s.radicado;
+  $("det-historial").textContent = historialTexto(s.hist);
+
+  $("det-obs").style.display = s.observaciones ? "block" : "none";
+  $("det-obs-txt").textContent = s.observaciones;
+  $("det-soporte").style.display = s.soporte ? "flex" : "none";
+  $("det-falta-sop").style.display = faltaSoporte(s) ? "block" : "none";
+  $("det-alerta").style.display = s.alerta ? "block" : "none";
+  $("det-alerta-txt").textContent = s.alerta;
+
+  const hayReal = s.salidaReal || s.regresoReal;
+  $("det-porteria").style.display = hayReal ? "block" : "none";
+  if(hayReal) $("det-real").textContent =
+    "Salió a las " + (s.salidaReal || "—") + " y regresó a las " + (s.regresoReal || "—") + ".";
+
+  const decidido = s.estado !== "pendiente";
+  $("det-acciones").style.display = decidido ? "none" : "block";
+  $("det-decidido").style.display = decidido ? "block" : "none";
+  if(decidido){
+    $("det-estado").innerHTML = '<span class="badge ' + CLASE[s.estado] + '"><i></i>' + TEXTO[s.estado] + '</span>';
+    $("det-comentario-box").style.display = s.comentario ? "block" : "none";
+    $("det-comentario").textContent = s.comentario;
+  }
+}
+
+function abrirAprobar(){
+  $("apr-sub").textContent = sel.nombre + " · " + sel.duracion + " · " + sel.fecha + " " + sel.salida;
+  $("apr-comentario").value = "";
+  $("apr-falta-sop").style.display = faltaSoporte(sel) ? "block" : "none";
+  ir("paso-aprobar");
+}
+
+function confirmarAprobar(){
+  sel.estado = "aprobado";
+  sel.comentario = $("apr-comentario").value.trim();
+  pintar(); pintarDetalle(); ir("paso-bandeja");
+}
+
+function abrirRechazar(){
+  $("rec-sub").textContent = sel.nombre + " · " + sel.duracion + " · " + sel.fecha + " " + sel.salida;
+  $("rec-comentario").value = "";
+  err("error-rechazo","");
+  document.querySelectorAll('input[name=motrec]')[0].checked = true;
+  ir("paso-rechazar");
+}
+
+function confirmarRechazar(){
+  const txt = $("rec-comentario").value.trim();
+  if(!txt) return err("error-rechazo","Escribe por qué lo rechazas. El colaborador solo verá esto.");
+  sel.estado = "rechazado";
+  sel.comentario = document.querySelector('input[name=motrec]:checked').value + ". " + txt;
+  pintar(); pintarDetalle(); ir("paso-bandeja");
+}
+
+function salir(){ $("correo").value = ""; $("clave").value = ""; ir("paso-login"); }
+
+</script>
+</body>
+</html>

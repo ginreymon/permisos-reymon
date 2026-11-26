@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Permisos · Talento humano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-400:#94a3b8;
+  --slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;
+  --gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;
+  --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-300:#93c5fd;--blue-900:#1e3a8a;--blue-950:#172554;
+  --emerald-50:#ecfdf5;--emerald-100:#d1fae5;--emerald-200:#a7f3d0;--emerald-500:#10b981;--emerald-600:#059669;--emerald-700:#047857;--emerald-800:#065f46;
+  --red-50:#fef2f2;--red-100:#fee2e2;--red-200:#fecaca;--red-500:#ef4444;--red-600:#dc2626;--red-700:#b91c1c;--red-800:#991b1b;
+  --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-200:#fde68a;--amber-500:#f59e0b;--amber-700:#b45309;--amber-800:#92400e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--slate-50);color:var(--slate-800);
+  font-family:Inter,"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+body::selection,::selection{background:var(--blue-900);color:#fff}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+/* Header (6.12) */
+.header{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:40;
+  padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}
+.header .titulo{font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--blue-900);text-transform:uppercase}
+.header .der{font-size:11px;color:var(--gray-400);text-align:right;line-height:1.35}
+
+/* Tarjeta (6.2) */
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);padding:20px}
+.card-h{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-100);padding-bottom:12px;margin-bottom:18px}
+.card-h .ico{padding:8px;background:var(--blue-50);color:var(--blue-900);border-radius:12px;display:flex}
+.card-h h3{font-size:13px;font-weight:700;color:var(--slate-800);text-transform:uppercase;letter-spacing:.05em;margin:0}
+.card-h p{font-size:11px;color:var(--gray-400);margin:2px 0 0}
+
+/* Micro-etiqueta (2.2) */
+.label{font-size:10px;font-weight:700;color:var(--slate-400);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:6px;display:block}
+
+/* Botones (6.1) */
+.btn{background:var(--blue-900);color:#fff;border:none;border-radius:8px;padding:0 16px;height:36px;
+  font-family:inherit;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;gap:6px;transition:background .2s}
+.btn:hover{background:var(--blue-950)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-out{background:#fff;color:var(--slate-700);border:1px solid var(--gray-200)}
+.btn-out:hover{background:var(--slate-50)}
+.btn-ok{background:var(--emerald-700)}.btn-ok:hover{background:var(--emerald-800)}
+.btn-no{background:var(--red-700)}.btn-no:hover{background:var(--red-800)}
+/* Escala táctil para planta */
+.btn-xl{height:56px;width:100%;font-size:13px;border-radius:12px}
+
+/* Badge (6.4) */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:9999px;
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.badge i{width:6px;height:6px;border-radius:9999px;display:block}
+.b-ok{background:var(--emerald-100);color:var(--emerald-800)} .b-ok i{background:var(--emerald-500)}
+.b-pen{background:var(--amber-100);color:var(--amber-800);border:1px solid var(--amber-200)} .b-pen i{background:var(--amber-500)}
+.b-no{background:var(--red-100);color:var(--red-800)} .b-no i{background:var(--red-500)}
+.b-neu{background:var(--slate-100);color:var(--slate-500)} .b-neu i{background:var(--slate-400)}
+.b-info{background:var(--blue-100);color:var(--blue-900)} .b-info i{background:var(--blue-900)}
+
+/* Inputs (6.6) */
+input,select,textarea{width:100%;font-family:inherit;font-size:15px;font-weight:600;color:var(--slate-800);
+  background:var(--slate-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 12px;min-height:48px;
+  outline:none;transition:box-shadow .15s,border-color .15s}
+input:focus,select:focus,textarea:focus{background:#fff;border-color:var(--blue-900);box-shadow:0 0 0 1px var(--blue-900)}
+input::placeholder,textarea::placeholder{font-style:italic;font-weight:400;color:var(--slate-400)}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue-900);outline-offset:2px}
+.campo{margin-bottom:16px}
+
+/* Avisos */
+.nota{border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.55}
+.n-amb{background:var(--amber-50);border:1px solid var(--amber-200);color:var(--amber-800)}
+.n-red{background:var(--red-50);border:1px solid var(--red-200);color:var(--red-800)}
+.n-blu{background:var(--blue-50);border:1px solid var(--blue-200);color:var(--blue-900)}
+.n-neu{background:var(--slate-50);border:1px solid var(--gray-200);color:var(--slate-600)}
+.nota b{display:block;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:10px;margin-bottom:3px}
+.err{color:var(--red-700);font-size:12px;font-weight:600;margin-top:8px;display:none}
+.err.on{display:block}
+.demo{margin-top:16px;font-size:11px;color:var(--gray-400);border:1px dashed var(--gray-300);
+  border-radius:12px;padding:12px;line-height:1.6;background:#fff}
+.demo .mono{color:var(--slate-700);font-weight:700}
+.paso{display:none}.paso.on{display:block}
+@media (prefers-reduced-motion:no-preference){
+  .paso.on{animation:ap .18s ease-out}@keyframes ap{from{opacity:0}to{opacity:1}}
+}
+
+main{padding:24px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.card{padding:24px}
+.filtros{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.filtros>div{min-width:140px}
+.filtros input,.filtros select{font-size:12px;font-weight:600;min-height:36px;padding:8px 10px;border-radius:8px}
+.filtros .der{margin-left:auto}
+.crece{flex:1}
+.graf-h{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  border-bottom:1px solid var(--gray-100);padding-bottom:14px;margin-bottom:16px}
+.graf-h h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:0;color:var(--slate-800)}
+.toggle{display:inline-flex;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden}
+.toggle button{background:#fff;border:none;padding:0 14px;height:32px;font-family:inherit;font-size:10px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate-500);cursor:pointer;
+  transition:all .2s}
+.toggle button+button{border-left:1px solid var(--gray-200)}
+.toggle button:hover{background:var(--slate-50)}
+.toggle button[aria-pressed=true]{background:var(--blue-900);color:#fff;font-weight:800}
+.bfila{display:grid;grid-template-columns:140px 1fr 110px;align-items:center;gap:14px;padding:8px 6px;
+  border-radius:8px;transition:background .15s}
+.bfila:hover{background:var(--slate-50)}
+.bet{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-500);
+  text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bpista{background:var(--slate-100);border-radius:6px;height:24px;overflow:hidden}
+.bbar{display:block;height:24px;background:var(--blue-900);border-radius:6px;transition:width .3s ease}
+.bfila:hover .bbar{background:var(--blue-950)}
+.bval{font-size:13px;font-weight:800;color:var(--slate-900)}
+.globo{position:absolute;display:none;z-index:50;background:var(--slate-900);color:#fff;border-radius:12px;
+  padding:14px 16px;font-size:11px;min-width:230px;box-shadow:0 10px 15px -3px rgb(0 0 0 / .25);pointer-events:none}
+.globo b{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:9px;color:#fff}
+.globo .lin{display:flex;justify-content:space-between;gap:18px;padding:3px 0;color:var(--slate-400)}
+.globo .lin span:last-child{color:#fff;font-weight:800}
+.tabla{overflow-x:auto;border:1px solid var(--gray-200);border-radius:16px;background:#fff;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}
+table{width:100%;text-align:left;border-collapse:collapse}
+thead tr{background:var(--slate-50);border-bottom:1px solid var(--gray-200)}
+th{font-size:10px;font-weight:700;color:var(--slate-500);text-transform:uppercase;letter-spacing:.1em;
+  padding:14px 18px;white-space:nowrap}
+tbody tr{border-top:1px solid var(--gray-100);transition:background .15s}
+tbody tr:hover{background:var(--slate-50)}
+td{padding:14px 18px;font-size:12px;vertical-align:top;color:var(--slate-700)}
+td.b{font-weight:800;color:var(--slate-900)}
+.nom{display:block;font-weight:700;color:var(--slate-800)}
+.sub{display:block;font-size:10px;color:var(--slate-400);font-weight:600;margin-top:2px}
+.tenue{color:var(--slate-400)}
+.alerta{color:var(--amber-700);font-weight:800}
+.sin{padding:26px;text-align:center;color:var(--slate-400);font-style:italic;font-size:12px}
+.pill{display:none;align-items:center;gap:6px;background:var(--amber-100);color:var(--amber-800);
+  border:1px solid var(--amber-200);border-radius:9999px;padding:5px 12px;font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.08em;font-family:"JetBrains Mono",monospace}
+.pill::after{content:"soporte(s) pendiente(s)";font-family:Inter,sans-serif}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:-70px;background:var(--slate-900);color:#fff;
+  border-radius:12px;padding:14px 20px;font-size:12px;font-weight:600;transition:bottom .25s ease;z-index:60;
+  box-shadow:0 10px 15px -3px rgb(0 0 0 / .25)}
+.toast.ver{bottom:24px}
+@media(max-width:820px){
+  main{padding:16px}
+  .bfila{grid-template-columns:100px 1fr 84px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="titulo">Permisos</span>
+  <div style="display:flex;align-items:center;gap:18px">
+    <span class="pill" id="pill-sin">0</span>
+    <span class="der">Última sincronización con el ERP<br>hoy, 4:00 a. m. · 412 empleados activos</span>
+  </div>
+</div>
+
+<main>
+
+  <div class="card" style="position:relative">
+    <div class="graf-h">
+      <h3>Permisos por área</h3>
+      <span class="toggle">
+        <button id="g-cant" aria-pressed="true" onclick="modo('cantidad')">Cantidad</button>
+        <button id="g-tiem" aria-pressed="false" onclick="modo('tiempo')">Tiempo real</button>
+      </span>
+    </div>
+    <div id="barras"></div>
+    <div class="globo" id="globo"></div>
+  </div>
+
+  <div class="card">
+    <div class="filtros">
+      <div><label class="label" for="f-desde">Desde</label>
+        <input type="date" id="f-desde" value="2026-09-01" onchange="pintarPermisos()"></div>
+      <div><label class="label" for="f-hasta">Hasta</label>
+        <input type="date" id="f-hasta" value="2026-09-30" onchange="pintarPermisos()"></div>
+      <div class="crece"><label class="label" for="f-area">Área</label>
+        <select id="f-area" onchange="pintarPermisos()"><option value="">Todas</option></select></div>
+      <div><label class="label" for="f-estado">Estado</label>
+        <select id="f-estado" onchange="pintarPermisos()">
+          <option value="">Todos</option><option value="pendiente">Pendiente</option>
+          <option value="aprobado">Aprobado</option><option value="cerrado">Cerrado</option>
+          <option value="rechazado">Rechazado</option></select></div>
+      <div><label class="label" for="f-clas">Clasificación</label>
+        <select id="f-clas" onchange="pintarPermisos()">
+          <option value="">Todas</option><option value="pend">Soporte pendiente</option>
+          <option value="mixto">Repartidos</option><option value="si">Descontables</option>
+          <option value="no">No descontables</option></select></div>
+      <div class="der"><button class="btn" onclick="exportar()">Exportar a Excel</button></div>
+    </div>
+  </div>
+
+  <div class="tabla">
+    <table>
+      <thead><tr>
+        <th>N.º</th><th>Colaborador</th><th>Área</th><th>Tipo</th><th>Fecha</th>
+        <th>Autorizado</th><th>Real</th><th>Duración</th><th>Estado</th>
+      </tr></thead>
+      <tbody id="tb-permisos"></tbody>
+    </table>
+  </div>
+
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const permisos = [
+  { id:1042, ced:"1020304050", nom:"Juliana Pérez Ramírez",  area:"Producción",    tipo:"Personal", fecha:"2026-09-04", aut:"14:00 a 15:15", real:"14:06 a 15:20", min:75,  realMin:74,  estado:"cerrado",   soporte:false, plazoAbierto:false, sinRegreso:false },
+  { id:1041, ced:"1094556677", nom:"Andrés Camilo Ospina",   area:"Producción",    tipo:"Médico",   fecha:"2026-09-05", aut:"07:00 a 10:00", real:"—",             min:180, realMin:0,   estado:"aprobado",  soporte:true,  plazoAbierto:false, sinRegreso:false },
+  { id:1040, ced:"1094556677", nom:"Andrés Camilo Ospina",   area:"Producción",    tipo:"Médico",   fecha:"2026-09-08", aut:"08:00 a 10:00", real:"—",             min:120, realMin:0,   estado:"aprobado",  soporte:true,  plazoAbierto:false, sinRegreso:false },
+  { id:1039, ced:"79554433",   nom:"Wilson Gutiérrez Ríos",  area:"Producción",    tipo:"ARL",      fecha:"2026-09-03", aut:"16:30 a 17:15", real:"16:28 · sin regreso", min:45, realMin:45, estado:"cerrado", soporte:false, plazoAbierto:false, sinRegreso:true },
+  { id:1038, ced:"71223344",   nom:"Óscar Iván Betancur",    area:"Mantenimiento", tipo:"Personal", fecha:"2026-09-02", aut:"13:05 a 14:05", real:"13:05 a 14:22", min:60,  realMin:77,  estado:"cerrado",   soporte:false, plazoAbierto:false, sinRegreso:false },
+  { id:1037, ced:"1088776655", nom:"Sandra Milena Quintero", area:"Logística",     tipo:"ARL",      fecha:"2026-09-02", aut:"14:00 a 15:30", real:"14:02 a 15:25", min:90,  realMin:83,  estado:"cerrado",   soporte:true,  plazoAbierto:false, sinRegreso:false },
+  { id:1036, ced:"1032445566", nom:"Diana Marcela Toro",     area:"Calidad",       tipo:"Médico",   fecha:"2026-09-01", aut:"15:00 a 16:00", real:"15:00 a 16:04", min:60,  realMin:64,  estado:"cerrado",   soporte:false, plazoAbierto:true,  sinRegreso:false },
+  { id:1035, ced:"1020304050", nom:"Juliana Pérez Ramírez",  area:"Producción",    tipo:"Personal", fecha:"2026-09-01", aut:"08:00 a 12:00", real:"—",             min:240, realMin:0,   estado:"rechazado", soporte:false, plazoAbierto:false, sinRegreso:false },
+  { id:1034, ced:"71223344",   nom:"Óscar Iván Betancur",    area:"Mantenimiento", tipo:"Médico",   fecha:"2026-09-09", aut:"09:00 a 12:00", real:"09:03 a 12:00", min:180, realMin:177, estado:"cerrado",   soporte:true,  plazoAbierto:false, sinRegreso:false },
+  { id:1033, ced:"71223344",   nom:"Óscar Iván Betancur",    area:"Mantenimiento", tipo:"Médico",   fecha:"2026-09-15", aut:"09:00 a 11:00", real:"09:00 a 11:10", min:120, realMin:130, estado:"cerrado",   soporte:true,  plazoAbierto:false, sinRegreso:false },
+  { id:1032, ced:"1032445566", nom:"Diana Marcela Toro",     area:"Calidad",       tipo:"Personal", fecha:"2026-09-10", aut:"10:00 a 10:45", real:"10:01 a 10:47", min:45,  realMin:46,  estado:"cerrado",   soporte:false, plazoAbierto:false, sinRegreso:false },
+  { id:1031, ced:"1088776655", nom:"Sandra Milena Quintero", area:"Logística",     tipo:"Personal", fecha:"2026-09-11", aut:"16:00 a 17:00", real:"16:00 a 17:05", min:60,  realMin:65,  estado:"cerrado",   soporte:false, plazoAbierto:false, sinRegreso:false },
+  { id:1030, ced:"1017889900", nom:"María Fernanda Loaiza",  area:"Producción",    tipo:"Escolar",  fecha:"2026-09-05", aut:"07:00 a 12:00", real:"07:00 a 12:00", min:300, realMin:300, estado:"cerrado",   soporte:true,  plazoAbierto:false, sinRegreso:false },
+  { id:1028, ced:"1017889900", nom:"María Fernanda Loaiza",  area:"Producción",    tipo:"Escolar",  fecha:"2026-09-22", aut:"08:00 a 09:00", real:"—",             min:60,  realMin:0,   estado:"aprobado",  soporte:true,  plazoAbierto:false, sinRegreso:false }
+];
+
+const $ = id => document.getElementById(id);
+const TEXTO = { pendiente:"Pendiente", aprobado:"Aprobado", cerrado:"Cerrado", rechazado:"Rechazado" };
+const CLASE = { pendiente:"b-pen", aprobado:"b-ok", cerrado:"b-neu", rechazado:"b-no" };
+
+function fmt(min){
+  const h = Math.floor(min/60), m = min%60;
+  if(h && m) return h + " h " + m + " min";
+  return h ? h + " h" : m + " min";
+}
+
+/* Topes mensuales por tipo. El personal no tiene tope: siempre se descuenta. */
+const TOPE = { "Médico":240, "ARL":360, "Escolar":240 };
+
+/* Minutos del mismo empleado, tipo y mes consumidos antes de este permiso.
+   Solo la parte cubierta gasta cupo; el excedente se vuelve permiso personal. */
+const acumulado = {};
+(function(){
+  const bolsa = {};
+  permisos
+    .filter(p => ["aprobado","cerrado"].includes(p.estado))
+    .sort((a,b) => a.fecha.localeCompare(b.fecha) || a.id - b.id)
+    .forEach(p => {
+      const k = p.ced + "|" + p.tipo + "|" + p.fecha.slice(0,7);
+      const previo = bolsa[k] || 0;
+      acumulado[p.id] = previo;
+      bolsa[k] = previo + Math.min(p.min, Math.max(0, (TOPE[p.tipo] || 0) - previo));
+    });
+})();
+
+function clasificar(p){
+  if(!["aprobado","cerrado"].includes(p.estado))
+    return { grupo:"na", txt:"No aplica", cls:"na", cubierto:0, personal:0 };
+  if(p.tipo === "Personal")
+    return { grupo:"si", txt:"Descontable", cls:"b-no", cubierto:0, personal:p.min };
+  if(!p.soporte)
+    return p.plazoAbierto
+      ? { grupo:"pend", txt:"Soporte pendiente", cls:"b-pen", cubierto:0, personal:0 }
+      : { grupo:"si", txt:"Descontable · sin soporte", cls:"b-no", cubierto:0, personal:p.min };
+
+  const restante = Math.max(0, TOPE[p.tipo] - (acumulado[p.id] || 0));
+  const cubierto = Math.min(p.min, restante);
+  const personal = p.min - cubierto;
+
+  if(!personal) return { grupo:"no", txt:"No descontable", cls:"b-ok", cubierto, personal:0 };
+  if(!cubierto) return { grupo:"si", txt:"Descontable · cupo agotado", cls:"b-no", cubierto:0, personal };
+  return { grupo:"mixto", txt:"Descontable " + fmt(personal), cls:"b-pen", cubierto, personal };
+}
+
+function filtrados(){
+  const d = $("f-desde").value, h = $("f-hasta").value;
+  const a = $("f-area").value, e = $("f-estado").value, c = $("f-clas").value;
+  return permisos.filter(p =>
+    (!d || p.fecha >= d) && (!h || p.fecha <= h) &&
+    (!a || p.area === a) && (!e || p.estado === e) &&
+    (!c || clasificar(p).grupo === c));
+}
+
+function pintarPermisos(){
+  const lista = filtrados();
+  const pend = permisos.filter(p => clasificar(p).grupo === "pend").length;
+  $("pill-sin").textContent = pend;
+  $("pill-sin").style.display = pend ? "inline-flex" : "none";
+
+  $("tb-permisos").innerHTML = !lista.length
+    ? '<tr><td colspan="9" class="sin">Sin información registrada.</td></tr>'
+    : lista.map(p => {
+        const c = clasificar(p);
+        const sub = c.personal && c.cubierto ? fmt(c.cubierto) + " + " + fmt(c.personal) + " personal"
+                  : c.personal && p.tipo !== "Personal" && p.soporte ? "todo como personal" : "";
+        return `<tr>
+          <td class="mono b">${p.id}</td>
+          <td><span class="nom">${p.nom}</span><span class="sub mono">${p.ced}</span></td>
+          <td>${p.area}</td>
+          <td>${p.tipo}${sub ? '<span class="sub">' + sub + '</span>' : ''}</td>
+          <td class="mono">${p.fecha.slice(8)}/${p.fecha.slice(5,7)}</td>
+          <td class="mono">${p.aut}</td>
+          <td class="mono ${p.sinRegreso ? "alerta" : "tenue"}">${p.real}</td>
+          <td class="mono b">${fmt(p.min)}</td>
+          <td><span class="badge ${CLASE[p.estado]}"><i></i>${TEXTO[p.estado]}</span>
+            ${c.cls === "na" ? "" : '<span class="badge ' + c.cls + '" style="margin-top:5px"><i></i>' + c.txt + '</span>'}</td>
+        </tr>`;
+      }).join("");
+
+  pintarGrafica(lista);
+}
+
+/* ── Gráfica por área ── */
+let modoGraf = "cantidad";
+function modo(m){
+  modoGraf = m;
+  $("g-cant").setAttribute("aria-pressed", m === "cantidad");
+  $("g-tiem").setAttribute("aria-pressed", m === "tiempo");
+  pintarGrafica(filtrados());
+}
+
+function pintarGrafica(lista){
+  const areas = {};
+  lista.filter(p => ["aprobado","cerrado"].includes(p.estado)).forEach(p => {
+    const a = areas[p.area] || (areas[p.area] = { n:0, min:0, gente:{} });
+    a.n++; a.min += p.realMin;
+    const g = a.gente[p.nom] || (a.gente[p.nom] = { n:0, min:0 });
+    g.n++; g.min += p.realMin;
+  });
+
+  const filas = Object.entries(areas)
+    .map(([nombre,a]) => ({ nombre, ...a, valor: modoGraf === "cantidad" ? a.n : a.min }))
+    .sort((x,y) => y.valor - x.valor);
+
+  if(!filas.length){ $("barras").innerHTML = '<p class="sin">Sin datos para graficar.</p>'; return; }
+  const tope = Math.max(...filas.map(f => f.valor)) || 1;
+
+  $("barras").innerHTML = filas.map((f,i) => `
+    <div class="bfila" onmouseenter="globo(this,${i})" onmouseleave="ocultarGlobo()">
+      <span class="bet">${f.nombre}</span>
+      <span class="bpista"><span class="bbar" style="width:${Math.max(3, f.valor/tope*100)}%"></span></span>
+      <span class="bval mono">${modoGraf === "cantidad" ? f.valor : fmt(f.valor)}</span>
+    </div>`).join("");
+  window.filasGraf = filas;
+}
+
+function globo(fila, i){
+  const f = window.filasGraf[i], g = $("globo");
+  const clave = modoGraf === "cantidad" ? "n" : "min";
+  const gente = Object.entries(f.gente).sort((a,b) => b[1][clave] - a[1][clave]);
+  g.innerHTML = "<b>" + f.nombre + "</b>" + gente.map(([nom,d]) =>
+    '<span class="lin"><span>' + nom + '</span><span class="mono">' +
+    (modoGraf === "cantidad" ? d.n + (d.n === 1 ? " permiso" : " permisos") : fmt(d.min)) +
+    '</span></span>').join("");
+  const cont = fila.closest(".card").getBoundingClientRect();
+  const r = fila.getBoundingClientRect();
+  g.style.display = "block";
+  g.style.top = (r.top - cont.top + r.height + 6) + "px";
+  g.style.left = Math.min(r.left - cont.left + 150, cont.width - g.offsetWidth - 20) + "px";
+}
+const ocultarGlobo = () => $("globo").style.display = "none";
+
+// El Excel lleva solo las columnas que pidió nómina.
+function exportar(){
+  const filas = filtrados();
+  const csv = [["cedula","nombre","tipo","area","duracion"]]
+    .concat(filas.map(p => [p.ced, p.nom, p.tipo, p.area, fmt(p.min)]));
+  console.table(csv);
+  const t = $("toast");
+  t.textContent = "Exportando " + filas.length + " permisos · cédula, nombre, tipo, área, duración.";
+  t.classList.add("ver");
+  clearTimeout(window.tT); window.tT = setTimeout(()=>t.classList.remove("ver"), 2800);
+}
+
+[...new Set(permisos.map(p => p.area))].sort().forEach(a => {
+  const o = document.createElement("option"); o.value = o.textContent = a; $("f-area").appendChild(o);
+});
+pintarPermisos();
+
+</script>
+</body>
+</html>

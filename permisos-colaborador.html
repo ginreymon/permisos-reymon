@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8fafc">
+<title>Mis permisos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-400:#94a3b8;
+  --slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;
+  --gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;
+  --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-300:#93c5fd;--blue-900:#1e3a8a;--blue-950:#172554;
+  --emerald-50:#ecfdf5;--emerald-100:#d1fae5;--emerald-200:#a7f3d0;--emerald-500:#10b981;--emerald-600:#059669;--emerald-700:#047857;--emerald-800:#065f46;
+  --red-50:#fef2f2;--red-100:#fee2e2;--red-200:#fecaca;--red-500:#ef4444;--red-600:#dc2626;--red-700:#b91c1c;--red-800:#991b1b;
+  --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-200:#fde68a;--amber-500:#f59e0b;--amber-700:#b45309;--amber-800:#92400e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--slate-50);color:var(--slate-800);
+  font-family:Inter,"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+body::selection,::selection{background:var(--blue-900);color:#fff}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+/* Header (6.12) */
+.header{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:40;
+  padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}
+.header .titulo{font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--blue-900);text-transform:uppercase}
+.header .der{font-size:11px;color:var(--gray-400);text-align:right;line-height:1.35}
+
+/* Tarjeta (6.2) */
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);padding:20px}
+.card-h{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-100);padding-bottom:12px;margin-bottom:18px}
+.card-h .ico{padding:8px;background:var(--blue-50);color:var(--blue-900);border-radius:12px;display:flex}
+.card-h h3{font-size:13px;font-weight:700;color:var(--slate-800);text-transform:uppercase;letter-spacing:.05em;margin:0}
+.card-h p{font-size:11px;color:var(--gray-400);margin:2px 0 0}
+
+/* Micro-etiqueta (2.2) */
+.label{font-size:10px;font-weight:700;color:var(--slate-400);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:6px;display:block}
+
+/* Botones (6.1) */
+.btn{background:var(--blue-900);color:#fff;border:none;border-radius:8px;padding:0 16px;height:36px;
+  font-family:inherit;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;gap:6px;transition:background .2s}
+.btn:hover{background:var(--blue-950)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-out{background:#fff;color:var(--slate-700);border:1px solid var(--gray-200)}
+.btn-out:hover{background:var(--slate-50)}
+.btn-ok{background:var(--emerald-700)}.btn-ok:hover{background:var(--emerald-800)}
+.btn-no{background:var(--red-700)}.btn-no:hover{background:var(--red-800)}
+/* Escala táctil para planta */
+.btn-xl{height:56px;width:100%;font-size:13px;border-radius:12px}
+
+/* Badge (6.4) */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:9999px;
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.badge i{width:6px;height:6px;border-radius:9999px;display:block}
+.b-ok{background:var(--emerald-100);color:var(--emerald-800)} .b-ok i{background:var(--emerald-500)}
+.b-pen{background:var(--amber-100);color:var(--amber-800);border:1px solid var(--amber-200)} .b-pen i{background:var(--amber-500)}
+.b-no{background:var(--red-100);color:var(--red-800)} .b-no i{background:var(--red-500)}
+.b-neu{background:var(--slate-100);color:var(--slate-500)} .b-neu i{background:var(--slate-400)}
+.b-info{background:var(--blue-100);color:var(--blue-900)} .b-info i{background:var(--blue-900)}
+
+/* Inputs (6.6) */
+input,select,textarea{width:100%;font-family:inherit;font-size:15px;font-weight:600;color:var(--slate-800);
+  background:var(--slate-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 12px;min-height:48px;
+  outline:none;transition:box-shadow .15s,border-color .15s}
+input:focus,select:focus,textarea:focus{background:#fff;border-color:var(--blue-900);box-shadow:0 0 0 1px var(--blue-900)}
+input::placeholder,textarea::placeholder{font-style:italic;font-weight:400;color:var(--slate-400)}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue-900);outline-offset:2px}
+.campo{margin-bottom:16px}
+
+/* Avisos */
+.nota{border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.55}
+.n-amb{background:var(--amber-50);border:1px solid var(--amber-200);color:var(--amber-800)}
+.n-red{background:var(--red-50);border:1px solid var(--red-200);color:var(--red-800)}
+.n-blu{background:var(--blue-50);border:1px solid var(--blue-200);color:var(--blue-900)}
+.n-neu{background:var(--slate-50);border:1px solid var(--gray-200);color:var(--slate-600)}
+.nota b{display:block;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:10px;margin-bottom:3px}
+.err{color:var(--red-700);font-size:12px;font-weight:600;margin-top:8px;display:none}
+.err.on{display:block}
+.demo{margin-top:16px;font-size:11px;color:var(--gray-400);border:1px dashed var(--gray-300);
+  border-radius:12px;padding:12px;line-height:1.6;background:#fff}
+.demo .mono{color:var(--slate-700);font-weight:700}
+.paso{display:none}.paso.on{display:block}
+@media (prefers-reduced-motion:no-preference){
+  .paso.on{animation:ap .18s ease-out}@keyframes ap{from{opacity:0}to{opacity:1}}
+}
+
+.marco{max-width:440px;margin:0 auto;padding:16px 14px 44px}
+.card+.card{margin-top:14px}
+.ident{border-left:3px solid var(--blue-900);background:var(--blue-50);border-radius:0 12px 12px 0;
+  padding:12px 14px;margin-bottom:16px}
+.ident-n{display:block;font-size:16px;font-weight:700;letter-spacing:.06em;color:var(--blue-900)}
+.ident-m{display:block;font-size:11px;color:var(--slate-500);margin-top:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--slate-600);line-height:1.5}
+.check input{width:22px;height:22px;min-height:0;flex:none;margin:0;accent-color:var(--blue-900);border-radius:6px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo .grande{font-size:24px;font-weight:800;text-align:center;min-height:60px;padding:8px}
+.uni{display:block;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--slate-400);margin-top:5px}
+.req{font-weight:700}.req.on{color:var(--red-600)}
+.soltar{border:2px dashed var(--gray-300);border-radius:12px;padding:16px;background:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.soltar:hover{border-color:var(--blue-900);background:var(--blue-50)}
+.soltar b{font-size:12px;font-weight:700;color:var(--slate-700)}
+.fila{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--gray-200);
+  border-radius:16px;box-shadow:0 1px 2px 0 rgb(0 0 0 / .05);padding:16px;margin-bottom:10px;
+  font-family:inherit;cursor:pointer;transition:all .2s}
+.fila:hover{box-shadow:0 4px 6px -1px rgb(0 0 0 / .1);border-color:var(--blue-300)}
+.f1{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.f-tipo{font-size:14px;font-weight:700;color:var(--slate-800)}
+.f-dur{font-size:15px;font-weight:800;color:var(--slate-900);white-space:nowrap}
+.f2{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px}
+.f-fecha{font-size:12px;font-weight:600;color:var(--slate-500)}
+.vacio{text-align:center;color:var(--slate-400);font-style:italic;font-size:13px;padding:28px}
+.consecutivo{font-size:34px;font-weight:900;color:var(--blue-900);margin:0;line-height:1.1}
+.ayuda{font-size:12px;color:var(--slate-500);margin:10px 0 0}
+.det-top{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  border-bottom:1px solid var(--gray-100);padding-bottom:12px;margin-bottom:6px}
+.resumen{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+.resumen th{text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--slate-400);padding:11px 0;width:44%;vertical-align:top}
+.resumen td{text-align:right;font-weight:700;color:var(--slate-800);padding:11px 0}
+.resumen tr+tr th,.resumen tr+tr td{border-top:1px solid var(--gray-100)}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="titulo">Mis permisos</span>
+  <span class="der">Talento humano</span>
+</div>
+
+<div class="marco">
+
+<!-- Identificación -->
+<section class="paso on" id="paso-identidad">
+  <div class="card">
+    <div class="card-h">
+      <span class="ico">&#128100;</span>
+      <div><h3>Identifícate</h3><p>No necesitas usuario ni contraseña.</p></div>
+    </div>
+
+    <div class="campo">
+      <label class="label" for="cedula">Número de cédula</label>
+      <input id="cedula" type="text" inputmode="numeric" autocomplete="off" placeholder="Sin puntos ni comas">
+    </div>
+    <div class="campo">
+      <label class="label" for="apellido">Primer apellido</label>
+      <input id="apellido" type="text" autocomplete="off" placeholder="Como aparece en tu contrato">
+    </div>
+
+    <label class="check"><input type="checkbox" id="habeas">
+      <span>Autorizo el tratamiento de mis datos personales para la gestión de mis permisos.</span></label>
+
+    <p class="err" id="error-identidad"></p>
+    <button class="btn btn-xl" id="btn-validar" style="margin-top:16px">Continuar</button>
+  </div>
+  <div class="demo">Prototipo. Cédula <span class="mono">1020304050</span> · apellido <span class="mono">Pérez</span>.</div>
+</section>
+
+<!-- Listado -->
+<section class="paso" id="paso-lista">
+  <div class="card">
+    <div class="ident">
+      <span class="ident-n mono" id="nombre-mask"></span>
+      <span class="ident-m" id="area-mask"></span>
+    </div>
+    <button class="btn btn-xl" onclick="nuevaSolicitud()">Solicitar un permiso</button>
+  </div>
+
+  <p class="label" style="margin:22px 0 10px">Historial · últimos 60 días</p>
+  <div id="lista"></div>
+
+  <button class="btn btn-out btn-xl" style="margin-top:18px" onclick="reiniciar()">Salir</button>
+</section>
+
+<!-- Formulario -->
+<section class="paso" id="paso-formulario">
+  <div class="card">
+    <div class="card-h">
+      <span class="ico">&#128221;</span>
+      <div><h3>Nuevo permiso</h3><p id="sub-formulario">Tu coordinador recibirá la solicitud.</p></div>
+    </div>
+
+    <div class="campo">
+      <label class="label" for="tipo">Tipo de permiso</label>
+      <select id="tipo">
+        <option value="">Selecciona una opción</option>
+        <option value="PP">Permiso personal</option>
+        <option value="PM">Permiso médico</option>
+        <option value="PA">Permiso por ARL</option>
+        <option value="PE">Permiso por actividades escolares</option>
+      </select>
+    </div>
+
+    <div class="nota n-neu" id="cupo" style="display:none;margin-bottom:16px"></div>
+
+    <label class="label">Duración</label>
+    <div class="duo" style="margin-bottom:16px">
+      <div><input type="number" id="horas" min="0" max="8" step="1" value="1" class="mono grande"><span class="uni">horas</span></div>
+      <div><select id="minutos" class="mono grande"><option selected>0</option><option>15</option><option>30</option><option>45</option></select><span class="uni">minutos</span></div>
+    </div>
+
+    <div class="duo" style="margin-bottom:16px">
+      <div><label class="label" for="fecha">Fecha</label><input id="fecha" type="date"></div>
+      <div><label class="label" for="hora">Hora de salida</label><input id="hora" type="time" value="08:00"></div>
+    </div>
+
+    <div class="campo">
+      <label class="label" for="motivo">Observaciones · opcional</label>
+      <textarea id="motivo" placeholder="Cuéntale a tu coordinador para qué necesitas el permiso."></textarea>
+    </div>
+
+    <div class="campo">
+      <label class="label">Documento soporte <span id="pista-soporte" class="req"></span></label>
+      <div class="soltar" onclick="document.getElementById('soporte').click()">
+        <span>&#128247;</span><b id="nombre-archivo">Toca para tomar la foto</b>
+      </div>
+      <input type="file" id="soporte" accept="image/*" capture="environment" hidden onchange="adjuntar(this)">
+    </div>
+
+    <p class="err" id="error-formulario"></p>
+    <button class="btn btn-xl" id="btn-enviar" style="margin-top:8px">Enviar solicitud</button>
+    <button class="btn btn-out btn-xl" style="margin-top:10px" onclick="ir('paso-lista')">Cancelar</button>
+  </div>
+</section>
+
+<!-- Enviado -->
+<section class="paso" id="paso-enviado">
+  <div class="card" style="text-align:center">
+    <span class="badge b-ok" style="margin-bottom:14px"><i></i>Enviada</span>
+    <p class="label" style="margin-bottom:4px">Permiso</p>
+    <p class="mono consecutivo" id="consecutivo-out">N.º 1042</p>
+    <p class="ayuda" id="texto-enviado">Le llegó a tu coordinador.</p>
+    <button class="btn btn-xl" style="margin-top:18px" onclick="ir('paso-lista')">Ver mis permisos</button>
+  </div>
+</section>
+
+<!-- Detalle -->
+<section class="paso" id="paso-detalle">
+  <div class="card">
+    <div class="det-top">
+      <span class="label" style="margin:0" id="det-titulo">Permiso</span>
+      <span id="det-estado"></span>
+    </div>
+
+    <table class="resumen">
+      <tr><th>Tipo</th><td id="det-tipo"></td></tr>
+      <tr><th>Duración</th><td class="mono" id="det-duracion"></td></tr>
+      <tr id="fila-reparto" style="display:none"><th>Se registra como</th><td id="det-reparto"></td></tr>
+      <tr><th>Fecha y hora</th><td class="mono" id="det-fecha"></td></tr>
+      <tr><th>Radicado</th><td id="det-radicado"></td></tr>
+    </table>
+
+    <div class="nota n-amb" id="det-sop" style="display:none;margin-bottom:14px">
+      <b>Falta el documento soporte</b><span id="det-sop-txt"></span></div>
+    <button class="btn btn-xl" id="btn-subir" style="display:none;margin-bottom:12px"
+      onclick="document.getElementById('soporte-tardio').click()">Subir soporte ahora</button>
+    <input type="file" id="soporte-tardio" accept="image/*" capture="environment" hidden onchange="subirTardio()">
+
+    <div class="nota n-neu" id="det-nota" style="display:none;margin-bottom:14px">
+      <b>Comentario de tu coordinador</b><span id="det-comentario"></span></div>
+
+    <button class="btn btn-no btn-xl" id="btn-cancelar" onclick="cancelar()">Cancelar esta solicitud</button>
+    <button class="btn btn-out btn-xl" style="margin-top:10px" onclick="ir('paso-lista')">Volver</button>
+  </div>
+</section>
+
+</div>
+
+<script>
+const EMPLEADO = { cedula:"1020304050", apellido:"pérez", nombre:"JU*** PÉ*** R***", area:"Producción" };
+const MES_ACTUAL = "2026-09";
+const TOPE = { "Permiso médico":240, "Permiso por ARL":360, "Permiso por actividades escolares":240 };
+const CON_SOPORTE = Object.keys(TOPE);
+let confirmoSinSoporte = false, seleccionado = null;
+
+let permisos = [
+  { id:1038, tipo:"Permiso médico", min:180, minCubierto:180, minPersonal:0, duracion:"3 h",
+    fecha:"28 ago · 07:00", mes:"2026-08", radicado:"27 ago, 4:40 p. m.", estado:"cerrado",
+    soporte:true, vencePlazo:false, comentario:"" },
+  { id:1035, tipo:"Permiso personal", min:240, minCubierto:0, minPersonal:240, duracion:"4 h",
+    fecha:"19 ago · 08:00", mes:"2026-08", radicado:"16 ago, 9:05 a. m.", estado:"rechazado",
+    soporte:false, vencePlazo:false, comentario:"Esa semana tenemos inventario, hablemos para moverlo." },
+  { id:1031, tipo:"Permiso por ARL", min:120, minCubierto:120, minPersonal:0, duracion:"2 h",
+    fecha:"03 sep · 09:00", mes:"2026-09", radicado:"02 sep, 8:15 a. m.", estado:"cerrado",
+    soporte:false, vencePlazo:true, comentario:"" },
+  { id:1030, tipo:"Permiso por actividades escolares", min:300, minCubierto:240, minPersonal:60,
+    duracion:"5 h", fecha:"05 sep · 07:00", mes:"2026-09", radicado:"04 sep, 6:40 a. m.",
+    estado:"cerrado", soporte:true, vencePlazo:false, comentario:"" }
+];
+
+const $ = id => document.getElementById(id);
+const err = (id,m) => { const e=$(id); e.textContent=m; e.classList.toggle("on", !!m); };
+const normalizar = s => s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+function fmt(min){
+  const h = Math.floor(min/60), m = min%60;
+  if(h && m) return h + " h " + m + " min";
+  return h ? h + " h" : m + " min";
+}
+
+const ESTADO = {
+  pendiente:{ t:"Pendiente", c:"b-pen" }, aprobado:{ t:"Aprobado", c:"b-ok" },
+  rechazado:{ t:"Rechazado", c:"b-no" }, cancelado:{ t:"Cancelado", c:"b-neu" },
+  cerrado:{ t:"Finalizado", c:"b-neu" }
+};
+const insignia = e => '<span class="badge ' + ESTADO[e].c + '"><i></i>' + ESTADO[e].t + '</span>';
+
+function ir(id){
+  document.querySelectorAll(".paso").forEach(p => p.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo(0,0);
+}
+
+function adjuntar(input){
+  $("nombre-archivo").textContent = input.files[0] ? input.files[0].name : "Toca para tomar la foto";
+}
+
+// El cupo solo lo consume la parte cubierta; el excedente pasa a permiso personal.
+function usadoMes(tipo){
+  return permisos
+    .filter(p => p.tipo === tipo && p.mes === MES_ACTUAL && !["rechazado","cancelado"].includes(p.estado))
+    .reduce((a,p) => a + (p.minCubierto !== undefined ? p.minCubierto : p.min), 0);
+}
+
+const minutosPedidos = () =>
+  (parseInt($("horas").value,10) || 0) * 60 + (parseInt($("minutos").value,10) || 0);
+
+function pintarCupo(){
+  const tipo = $("tipo").selectedOptions[0] ? $("tipo").selectedOptions[0].textContent : "";
+  const caja = $("cupo");
+  $("pista-soporte").textContent = CON_SOPORTE.includes(tipo) ? "· obligatorio" : "· opcional";
+  $("pista-soporte").className = CON_SOPORTE.includes(tipo) ? "req on" : "req";
+
+  if(!TOPE[tipo]){ caja.style.display = "none"; return; }
+
+  const tope = TOPE[tipo], usado = usadoMes(tipo), pide = minutosPedidos();
+  const restante = Math.max(0, tope - usado);
+  const cubierto = Math.min(pide, restante);
+  const exceso = pide - cubierto;
+
+  caja.style.display = "block";
+  caja.className = "nota " + (exceso ? "n-amb" : "n-neu");
+  if(!exceso){
+    caja.innerHTML = "<b>Cupo del mes</b>Llevas " + fmt(usado) + " de " + fmt(tope) +
+      ". Te quedan " + fmt(restante) + ".";
+  }else if(!cubierto){
+    caja.innerHTML = "<b>Cupo agotado</b>Ya usaste " + fmt(tope) + " este mes, así que este permiso " +
+      "quedará completo como permiso personal, que sí se descuenta del salario.";
+  }else{
+    caja.innerHTML = "<b>Este permiso se reparte</b>Te queda " + fmt(restante) + " de cupo: " +
+      fmt(cubierto) + " se registran en este tipo y " + fmt(exceso) +
+      " quedan como permiso personal, que sí se descuenta.";
+  }
+}
+
+$("btn-validar").onclick = () => {
+  const ced = $("cedula").value.trim(), ape = $("apellido").value;
+  if(!ced || !ape) return err("error-identidad","Completa la cédula y el primer apellido.");
+  if(!$("habeas").checked) return err("error-identidad","Debes autorizar el tratamiento de tus datos.");
+  err("error-identidad","");
+  const b = $("btn-validar"); b.disabled = true; b.textContent = "Validando…";
+
+  // Retardo constante: el tiempo de respuesta no debe delatar si la cédula existe.
+  setTimeout(()=>{
+    b.disabled = false; b.textContent = "Continuar";
+    const ok = ced === EMPLEADO.cedula && normalizar(ape) === normalizar(EMPLEADO.apellido);
+    if(!ok) return err("error-identidad",
+      "No pudimos validar tus datos. Verifícalos o comunícate con Talento Humano.");
+    $("nombre-mask").textContent = EMPLEADO.nombre;
+    $("area-mask").textContent = EMPLEADO.area + " · C.C. " + EMPLEADO.cedula;
+    $("sub-formulario").textContent = "Tu coordinador de " + EMPLEADO.area + " recibirá la solicitud.";
+    pintarLista();
+    ir("paso-lista");
+  }, 700);
+};
+
+function pintarLista(){
+  const c = $("lista");
+  if(!permisos.length){ c.innerHTML = '<p class="vacio">Todavía no has solicitado ningún permiso.</p>'; return; }
+  c.innerHTML = permisos.map(p => `
+    <button class="fila" onclick="verDetalle(${p.id})">
+      <span class="f1"><span class="f-tipo">${p.tipo}</span><span class="f-dur mono">${p.duracion}</span></span>
+      <span class="f2"><span class="f-fecha mono">${p.fecha}</span>${insignia(p.estado)}</span>
+      ${p.vencePlazo ? '<span class="badge b-pen" style="margin-top:8px"><i></i>Falta soporte</span>' : ''}
+    </button>`).join("");
+}
+
+function nuevaSolicitud(){
+  $("tipo").value = ""; $("motivo").value = ""; $("soporte").value = "";
+  $("horas").value = 1; $("minutos").value = "0"; $("hora").value = "08:00";
+  $("fecha").value = new Date().toISOString().slice(0,10);
+  $("nombre-archivo").textContent = "Toca para tomar la foto";
+  confirmoSinSoporte = false; $("btn-enviar").textContent = "Enviar solicitud";
+  err("error-formulario",""); pintarCupo();
+  ir("paso-formulario");
+}
+
+["tipo","horas","minutos"].forEach(id => $(id).addEventListener("change", pintarCupo));
+$("horas").addEventListener("input", pintarCupo);
+
+function fechaTexto(){
+  const f = $("fecha").value;
+  if(!f) return "—";
+  const [a,me,d] = f.split("-");
+  const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  return String(+d).padStart(2,"0") + " " + meses[+me-1] + " · " + $("hora").value;
+}
+
+$("btn-enviar").onclick = () => {
+  if(!$("tipo").value) return err("error-formulario","Selecciona el tipo de permiso.");
+  if(!$("fecha").value) return err("error-formulario","Indica la fecha del permiso.");
+  if(minutosPedidos() <= 0) return err("error-formulario","La duración no puede ser cero.");
+
+  const tipoTxt = $("tipo").selectedOptions[0].textContent;
+  const tieneSoporte = !!$("soporte").files[0];
+  const obligatorio = CON_SOPORTE.includes(tipoTxt);
+
+  // El soporte es obligatorio, pero se admite hasta 24 h después del regreso.
+  if(obligatorio && !tieneSoporte && !confirmoSinSoporte){
+    confirmoSinSoporte = true;
+    $("btn-enviar").textContent = "Enviar sin soporte por ahora";
+    return err("error-formulario",
+      "Este tipo de permiso necesita soporte. Puedes enviarlo y subirlo hasta 24 horas después de tu regreso; si no lo subes, el tiempo se descuenta del salario.");
+  }
+  err("error-formulario",""); $("btn-enviar").textContent = "Enviar solicitud"; confirmoSinSoporte = false;
+
+  const pedidos = minutosPedidos();
+  const restante = TOPE[tipoTxt] ? Math.max(0, TOPE[tipoTxt] - usadoMes(tipoTxt)) : pedidos;
+  const cubierto = TOPE[tipoTxt] ? Math.min(pedidos, restante) : 0;
+
+  const nuevo = {
+    id: Math.max(...permisos.map(p=>p.id), 1000) + 1,
+    tipo: tipoTxt, min: pedidos, minCubierto: cubierto, minPersonal: pedidos - cubierto,
+    mes: MES_ACTUAL, duracion: fmt(pedidos), fecha: fechaTexto(),
+    radicado: "Hoy, " + new Date().toLocaleTimeString("es-CO",{hour:"numeric",minute:"2-digit"}),
+    estado:"pendiente", soporte: tieneSoporte,
+    vencePlazo: obligatorio && !tieneSoporte, comentario:""
+  };
+  permisos.unshift(nuevo);
+  pintarLista();
+  $("consecutivo-out").textContent = "N.º " + nuevo.id;
+  $("texto-enviado").textContent = "Le llegó a tu coordinador de " + EMPLEADO.area + ".";
+  ir("paso-enviado");
+};
+
+function verDetalle(id){
+  const p = seleccionado = permisos.find(x => x.id === id);
+  $("det-titulo").textContent = "Permiso N.º " + p.id;
+  $("det-estado").innerHTML = insignia(p.estado);
+  $("det-tipo").textContent = p.tipo;
+  $("det-duracion").textContent = p.duracion;
+  $("det-fecha").textContent = p.fecha;
+  $("det-radicado").textContent = p.radicado;
+
+  const reparto = p.minPersonal > 0 && p.tipo !== "Permiso personal";
+  $("fila-reparto").style.display = reparto ? "table-row" : "none";
+  if(reparto){
+    $("det-reparto").innerHTML = p.minCubierto
+      ? fmt(p.minCubierto) + " en " + p.tipo.toLowerCase() + "<br>" + fmt(p.minPersonal) + " como personal"
+      : "Todo como permiso personal";
+  }
+
+  $("det-sop").style.display = p.vencePlazo ? "block" : "none";
+  $("btn-subir").style.display = p.vencePlazo ? "block" : "none";
+  $("det-sop-txt").textContent = "Tienes hasta 24 horas después de tu regreso para subirlo. " +
+    "Si no lo haces, Talento Humano descontará este tiempo del salario.";
+
+  $("det-nota").style.display = p.comentario ? "block" : "none";
+  $("det-comentario").textContent = p.comentario;
+  $("btn-cancelar").style.display = p.estado === "pendiente" ? "flex" : "none";
+  ir("paso-detalle");
+}
+
+function subirTardio(){
+  seleccionado.soporte = true; seleccionado.vencePlazo = false;
+  pintarLista(); verDetalle(seleccionado.id);
+}
+function cancelar(){ seleccionado.estado = "cancelado"; pintarLista(); verDetalle(seleccionado.id); }
+function reiniciar(){
+  $("cedula").value = ""; $("apellido").value = ""; $("habeas").checked = false;
+  ir("paso-identidad");
+}
+
+</script>
+</body>
+</html>
