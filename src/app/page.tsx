@@ -1,20 +1,17 @@
-import { leerSesion } from "@/lib/colaborador/session";
-import { enmascararNombre, enmascararCedula } from "@/lib/colaborador/identidad";
-import { tiposCatalogo, refrescarPermisos } from "@/app/actions/colaborador";
-import Colaborador from "@/components/colaborador/Colaborador";
-import type { IdentidadVista, PermisoVista } from "@/lib/colaborador/tipos";
+import { redirect } from "next/navigation";
+import { crearClienteServidor } from "@/lib/supabase/server";
+import Ingreso from "@/components/auth/Ingreso";
 
-// Vista del Colaborador (celular). Sin Supabase Auth: sesión propia por cookie.
+// Entrada única. Si ya hay sesión de staff, va directo a su bandeja.
+// Si no, muestra el login staff + el acceso al flujo de colaborador (/solicitar).
 export default async function Page() {
-  const [tipos, sesion] = await Promise.all([tiposCatalogo(), leerSesion()]);
-
-  let identidad: IdentidadVista | null = null;
-  let permisos: PermisoVista[] = [];
-  if (sesion) {
-    identidad = { cedula: enmascararCedula(sesion.doc), nombreMask: enmascararNombre(sesion.nom), area: sesion.cc };
-    const r = await refrescarPermisos();
-    if (r.ok) permisos = r.permisos;
+  const supa = await crearClienteServidor();
+  const { data: { user } } = await supa.auth.getUser();
+  if (user) {
+    const { data: rol } = await supa.rpc("mi_rol");
+    if (rol === "coordinador") redirect("/coordinador");
+    if (rol === "porteria") redirect("/porteria");
+    if (rol === "rrhh") redirect("/rrhh");
   }
-
-  return <Colaborador tipos={tipos} identidadInicial={identidad} permisosIniciales={permisos} />;
+  return <Ingreso />;
 }
