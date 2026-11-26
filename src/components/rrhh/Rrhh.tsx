@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
-import { iniciarSesion, cerrarSesion, verSoporte } from "@/app/actions/rrhh";
+import { cerrarSesion, verSoporte } from "@/app/actions/rrhh";
 import { fmtDuracion } from "@/lib/colaborador/formato";
 import type { EstadoSolicitud } from "@/lib/supabase/database.types";
 import type { EstadoRRHH, RrhhVista } from "@/lib/rrhh/vista";
@@ -48,11 +48,6 @@ export default function Rrhh({ estado }: { estado: EstadoRRHH | null }) {
   const router = useRouter();
   const [pending, start] = useTransition();
 
-  // Login
-  const [correo, setCorreo] = useState("");
-  const [clave, setClave] = useState("");
-  const [errLogin, setErrLogin] = useState("");
-
   // Filtros
   const [desde, setDesde] = useState(inicioMes());
   const [hasta, setHasta] = useState(""); // sin tope: incluye permisos futuros
@@ -68,25 +63,17 @@ export default function Rrhh({ estado }: { estado: EstadoRRHH | null }) {
   const [toast, setToast] = useState("");
   const toastT = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function entrar() {
-    if (!correo.trim() || !clave) return setErrLogin("Escribe tu correo y contraseña.");
-    setErrLogin("");
-    const fd = new FormData();
-    fd.set("correo", correo); fd.set("clave", clave);
-    start(async () => {
-      const r = await iniciarSesion(fd);
-      if (!r.ok) return setErrLogin(r.error);
-      setClave("");
-      router.refresh();
-    });
-  }
   function salir() {
-    start(async () => { await cerrarSesion(); router.refresh(); });
+    start(async () => { await cerrarSesion(); router.push("/"); });
   }
   function abrirSoporte(id: number) {
+    // Abre la pestaña dentro del gesto del tap (síncrono). Si se abriera tras el
+    // await, el bloqueador de pop-ups del móvil la cancela. Luego se le fija la URL.
+    const w = window.open("", "_blank");
     start(async () => {
       const r = await verSoporte(id);
-      if (r.ok) window.open(r.url, "_blank", "noopener");
+      if (!r.ok) { w?.close(); return; }
+      if (w) { w.opener = null; w.location.href = r.url; } else window.location.href = r.url;
     });
   }
 
@@ -140,36 +127,8 @@ export default function Rrhh({ estado }: { estado: EstadoRRHH | null }) {
   }
 
   // ── LOGIN ──
-  if (!estado) {
-    return (
-      <>
-        <div className="header"><span className="titulo">Permisos</span></div>
-        <main>
-          <div className="card" style={{ maxWidth: 420, margin: "24px auto", width: "100%" }}>
-            <div className="card-h">
-              <span className="ico">🔒</span>
-              <div><h3>Talento Humano</h3><p>Ingresa con tu correo corporativo.</p></div>
-            </div>
-            <div className="campo">
-              <label className="label" htmlFor="correo">Correo corporativo</label>
-              <input id="correo" type="email" autoComplete="username" placeholder="talento.humano@empresa.com"
-                value={correo} onChange={(e) => setCorreo(e.target.value)} />
-            </div>
-            <div className="campo">
-              <label className="label" htmlFor="clave">Contraseña</label>
-              <input id="clave" type="password" autoComplete="current-password"
-                value={clave} onChange={(e) => setClave(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && entrar()} />
-            </div>
-            <p className={`err ${errLogin ? "on" : ""}`}>{errLogin}</p>
-            <button className="btn btn-xl" disabled={pending} onClick={entrar}>
-              {pending ? "Entrando…" : "Entrar"}
-            </button>
-          </div>
-        </main>
-      </>
-    );
-  }
+  // Sin sesión válida de RRHH: la página redirige al login principal (/).
+  if (!estado) return null;
 
   const tope = Math.max(1, ...chart.map((f) => f.valor));
   const sync = estado.ultimaSync

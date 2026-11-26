@@ -343,7 +343,7 @@ export default function CrearPorCedula({
         <div className={`soltar${exigeSoporte ? " soltar-oblig" : ""}`} onClick={() => fileRef.current?.click()}>
           <span>📷</span><b>{archivo ? archivo.name : "Toca para adjuntar la foto"}</b>
         </div>
-        <input ref={fileRef} type="file" accept="image/*" capture="environment" hidden
+        <input ref={fileRef} type="file" accept="image/*" hidden
           onChange={(e) => setArchivo(e.target.files?.[0] ?? null)} />
       </div>
 

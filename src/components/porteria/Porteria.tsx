@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import SelectorHora from "@/components/ui/SelectorHora";
 import MisPermisosPorteria from "@/components/porteria/MisPermisosPorteria";
 import {
-  iniciarSesion, cerrarSesion, registrarSalida, registrarRegreso, deshacer,
+  cerrarSesion, registrarSalida, registrarRegreso, deshacer,
 } from "@/app/actions/porteria";
 import { minutosAHHMM } from "@/lib/colaborador/hora";
 import { iniciales, minutosDia, type AccionPorteria, type PortVista } from "@/lib/porteria/vista";
@@ -19,11 +19,6 @@ interface Ultimo {
 export default function Porteria({ estado, tipos }: { estado: PortVista[] | null; tipos: TipoCatalogo[] }) {
   const router = useRouter();
   const [pending, start] = useTransition();
-
-  // Login
-  const [correo, setCorreo] = useState("");
-  const [clave, setClave] = useState("");
-  const [errLogin, setErrLogin] = useState("");
 
   // Navegación: registro (tablero/confirmar) o solicitud (el portero pide para sí).
   const [vista, setVista] = useState<"registro" | "misPermisos">("registro");
@@ -50,21 +45,8 @@ export default function Porteria({ estado, tipos }: { estado: PortVista[] | null
     setLista(estado);
   }
 
-  function entrar() {
-    if (!correo.trim() || !clave) return setErrLogin("Escribe el usuario y la contraseña.");
-    setErrLogin("");
-    const fd = new FormData();
-    fd.set("correo", correo); fd.set("clave", clave);
-    start(async () => {
-      const r = await iniciarSesion(fd);
-      if (!r.ok) return setErrLogin(r.error);
-      setClave("");
-      router.refresh();
-    });
-  }
-
   function salir() {
-    start(async () => { await cerrarSesion(); router.refresh(); });
+    start(async () => { await cerrarSesion(); router.push("/"); });
   }
 
   function abrir(p: PortVista) {
@@ -141,39 +123,8 @@ export default function Porteria({ estado, tipos }: { estado: PortVista[] | null
     </div>
   );
 
-  // ── LOGIN ──
-  if (!estado) {
-    return (
-      <>
-        <div className="header"><span className="titulo">Portería</span></div>
-        <div className="marco">
-          <section className="paso on">
-            <div className="card">
-              <div className="card-h">
-                <span className="ico">🛡️</span>
-                <div><h3>Vigilancia</h3><p>La sesión queda abierta durante el turno.</p></div>
-              </div>
-              <div className="campo">
-                <label className="label" htmlFor="correo">Usuario</label>
-                <input id="correo" type="email" autoComplete="username" placeholder="porteria@empresa.com"
-                  value={correo} onChange={(e) => setCorreo(e.target.value)} />
-              </div>
-              <div className="campo">
-                <label className="label" htmlFor="clave">Contraseña</label>
-                <input id="clave" type="password" autoComplete="current-password"
-                  value={clave} onChange={(e) => setClave(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && entrar()} />
-              </div>
-              <p className={`err ${errLogin ? "on" : ""}`}>{errLogin}</p>
-              <button className="btn btn-xl" disabled={pending} onClick={entrar}>
-                {pending ? "Entrando…" : "Entrar"}
-              </button>
-            </div>
-          </section>
-        </div>
-      </>
-    );
-  }
+  // Sin sesión válida de portería: la página redirige al login principal (/).
+  if (!estado) return null;
 
   // ── SOLICITUD (el portero genera su propio permiso; la cuenta ya lo identifica) ──
   // Regla de 24 h como el colaborador; el permiso del PORTERO lo aprueba la Dirección General.

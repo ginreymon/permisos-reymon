@@ -134,26 +134,7 @@ export async function estadoRRHH(): Promise<EstadoRRHH | null> {
   };
 }
 
-// ── Login / logout ────────────────────────────────────────────────────────────
-export async function iniciarSesion(
-  formData: FormData,
-): Promise<{ ok: true } | { ok: false; error: string }> {
-  const email = String(formData.get("correo") ?? "").trim();
-  const password = String(formData.get("clave") ?? "");
-  if (!email || !password) return { ok: false, error: "Escribe tu correo y contraseña." };
-
-  const supa = await crearClienteServidor();
-  const { error } = await supa.auth.signInWithPassword({ email, password });
-  if (error) return { ok: false, error: "Correo o contraseña incorrectos." };
-
-  const { data: rol } = await supa.rpc("mi_rol");
-  if (rol !== "rrhh") {
-    await supa.auth.signOut();
-    return { ok: false, error: "Esta cuenta no es de Talento Humano." };
-  }
-  return { ok: true };
-}
-
+// ── Logout ────────────────────────────────────────────────────────────────────
 export async function cerrarSesion(): Promise<void> {
   const supa = await crearClienteServidor();
   await supa.auth.signOut();

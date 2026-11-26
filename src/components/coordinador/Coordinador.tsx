@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
-  iniciarSesion, cerrarSesion, aprobar, rechazar, verSoporte, subirSoporteCoord, type EstadoCoordinador,
+  cerrarSesion, aprobar, rechazar, verSoporte, subirSoporteCoord, type EstadoCoordinador,
 } from "@/app/actions/coordinador";
 import { aTitulo } from "@/lib/colaborador/identidad";
 import CrearPorCedula from "@/components/coordinador/CrearPorCedula";
@@ -44,11 +44,6 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
   const router = useRouter();
   const [pending, start] = useTransition();
 
-  // Login
-  const [correo, setCorreo] = useState("");
-  const [clave, setClave] = useState("");
-  const [errLogin, setErrLogin] = useState("");
-
   // Navegación
   const [paso, setPaso] = useState<Paso>("bandeja");
   const [tab, setTab] = useState<"pendiente" | "resueltos">("pendiente");
@@ -66,21 +61,8 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
   const opcionesRef = useRef<HTMLDivElement>(null);
   const recRef = useRef<HTMLTextAreaElement>(null);
 
-  function entrar() {
-    if (!correo.trim() || !clave) return setErrLogin("Escribe tu correo y contraseña.");
-    setErrLogin("");
-    const fd = new FormData();
-    fd.set("correo", correo); fd.set("clave", clave);
-    start(async () => {
-      const r = await iniciarSesion(fd);
-      if (!r.ok) return setErrLogin(r.error);
-      setClave("");
-      router.refresh();
-    });
-  }
-
   function salir() {
-    start(async () => { await cerrarSesion(); router.refresh(); });
+    start(async () => { await cerrarSesion(); router.push("/"); });
   }
 
   function abrir(s: CoordVista, destino: Paso) {
@@ -124,9 +106,13 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
   }
 
   function abrirSoporte(id: number) {
+    // Abre la pestaña dentro del gesto del tap (síncrono). Si se abriera tras el
+    // await, el bloqueador de pop-ups del móvil la cancela. Luego se le fija la URL.
+    const w = window.open("", "_blank");
     start(async () => {
       const r = await verSoporte(id);
-      if (r.ok) window.open(r.url, "_blank", "noopener");
+      if (!r.ok) { w?.close(); return setErrDec(r.error); }
+      if (w) { w.opener = null; w.location.href = r.url; } else window.location.href = r.url;
     });
   }
 
@@ -143,39 +129,8 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
     });
   }
 
-  // ── LOGIN ──
-  if (!estado) {
-    return (
-      <>
-        <div className="header"><span className="titulo">Aprobaciones</span></div>
-        <div className="marco">
-          <section className="paso on">
-            <div className="card">
-              <div className="card-h">
-                <span className="ico">🔒</span>
-                <div><h3>Ingreso</h3><p>Usa el correo del cargo, no el personal.</p></div>
-              </div>
-              <div className="campo">
-                <label className="label" htmlFor="correo">Correo corporativo</label>
-                <input id="correo" type="email" autoComplete="username" placeholder="coordinador.area@empresa.com"
-                  value={correo} onChange={(e) => setCorreo(e.target.value)} />
-              </div>
-              <div className="campo">
-                <label className="label" htmlFor="clave">Contraseña</label>
-                <input id="clave" type="password" autoComplete="current-password"
-                  value={clave} onChange={(e) => setClave(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && entrar()} />
-              </div>
-              <p className={`err ${errLogin ? "on" : ""}`}>{errLogin}</p>
-              <button className="btn btn-xl" disabled={pending} onClick={entrar}>
-                {pending ? "Entrando…" : "Entrar"}
-              </button>
-            </div>
-          </section>
-        </div>
-      </>
-    );
-  }
+  // Sin sesión válida de coordinador: la página redirige al login principal (/).
+  if (!estado) return null;
 
   const area = estado.esDirector ? "Dirección General" : (estado.areas.map(aTitulo).join(", ") || "Tu área");
   const lista = tab === "pendiente" ? estado.pendientes : estado.resueltos;
@@ -338,7 +293,7 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
                     onClick={() => fileSoporte.current?.click()}>
                     {pending ? "Subiendo…" : "Subir soporte por el colaborador"}
                   </button>
-                  <input ref={fileSoporte} type="file" accept="image/*" capture="environment" hidden onChange={onSoporteCoord} />
+                  <input ref={fileSoporte} type="file" accept="image/*" hidden onChange={onSoporteCoord} />
                   <p className={`err ${errDec ? "on" : ""}`}>{errDec}</p>
                 </>
               )}

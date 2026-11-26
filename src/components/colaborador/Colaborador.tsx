@@ -308,19 +308,11 @@ export default function Colaborador({
                 </select>
               </div>
 
-              {cupo && (() => {
-                const exceso = cupo.personal;
-                const clase = exceso ? "n-amb" : "n-neu";
-                let contenido: React.ReactNode;
-                if (!exceso) {
-                  contenido = <><b>Cupo del periodo (25 al 24)</b>Llevas {fmtDuracion(cupo.usado)} de {fmtDuracion(cupo.tope!)}. Te quedan {fmtDuracion(cupo.restante ?? 0)}.</>;
-                } else if (!cupo.cubierto) {
-                  contenido = <><b>Cupo agotado</b>Ya usaste {fmtDuracion(cupo.tope!)} en este periodo, así que este permiso quedará completo como permiso personal, que sí se descuenta del salario.</>;
-                } else {
-                  contenido = <><b>Este permiso se reparte</b>Te queda {fmtDuracion(cupo.restante ?? 0)} de cupo: {fmtDuracion(cupo.cubierto)} se registran en este tipo y {fmtDuracion(exceso)} quedan como permiso personal, que sí se descuenta.</>;
-                }
-                return <div className={`nota ${clase}`} style={{ marginBottom: 16 }}>{contenido}</div>;
-              })()}
+              {cupo && (
+                <div className="nota n-neu" style={{ marginBottom: 16 }}>
+                  <b>Cupo del periodo (25 al 24)</b>Llevas {fmtDuracion(cupo.usado)} en permisos este periodo.
+                </div>
+              )}
 
               {/* 1. Fecha: chips. Mínimo 24 h de anticipación -> sin "Hoy". */}
               <div className="campo">
@@ -379,7 +371,7 @@ export default function Colaborador({
                 <div className={`soltar${exigeSoporte ? " soltar-oblig" : ""}`} onClick={() => fileNuevo.current?.click()}>
                   <span>📷</span><b>{archivo ? archivo.name : "Toca para tomar la foto"}</b>
                 </div>
-                <input ref={fileNuevo} type="file" accept="image/*" capture="environment" hidden
+                <input ref={fileNuevo} type="file" accept="image/*" hidden
                   onChange={(e) => setArchivo(e.target.files?.[0] ?? null)} />
               </div>
 
@@ -440,7 +432,7 @@ export default function Colaborador({
                   </div>
                   <button className="btn btn-xl" style={{ marginBottom: 12 }} disabled={pending}
                     onClick={() => fileTardio.current?.click()}>Subir soporte ahora</button>
-                  <input ref={fileTardio} type="file" accept="image/*" capture="environment" hidden onChange={onTardio} />
+                  <input ref={fileTardio} type="file" accept="image/*" hidden onChange={onTardio} />
                 </>
               )}
 

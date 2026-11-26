@@ -50,7 +50,15 @@ export default function SelectorHora({
     emit(partes.h12, Math.max(0, Math.min(59, n)), partes.ap);
   }
   function setAp(ap: "AM" | "PM") {
-    if (conAmPm && ap !== partes.ap) emit(partes.h12, partes.mm, ap);
+    if (!conAmPm || ap === partes.ap) return;
+    // Incorpora cualquier valor a medio teclear (draft) para no perderlo al cambiar AM/PM.
+    const hRaw = draftH != null ? parseInt(draftH.replace(/\D/g, ""), 10) : NaN;
+    const mRaw = draftM != null ? parseInt(draftM.replace(/\D/g, ""), 10) : NaN;
+    const h = Number.isNaN(hRaw) ? partes.h12 : Math.max(hMin, Math.min(hMax, hRaw));
+    const mm = Number.isNaN(mRaw) ? partes.mm : Math.max(0, Math.min(59, mRaw));
+    setDraftH(null);
+    setDraftM(null);
+    emit(h, mm, ap);
   }
 
   const hDisp = draftH ?? String(partes.h12);
@@ -83,9 +91,11 @@ export default function SelectorHora({
       {conAmPm && (
         <div className="selhora-ampm" role="group" aria-label="AM o PM">
           <button type="button" className={`selhora-ap ${partes.ap === "AM" ? "on" : ""}`}
-            aria-pressed={partes.ap === "AM"} onClick={() => setAp("AM")}>AM</button>
+            aria-pressed={partes.ap === "AM"}
+            onMouseDown={(e) => e.preventDefault()} onClick={() => setAp("AM")}>AM</button>
           <button type="button" className={`selhora-ap ${partes.ap === "PM" ? "on" : ""}`}
-            aria-pressed={partes.ap === "PM"} onClick={() => setAp("PM")}>PM</button>
+            aria-pressed={partes.ap === "PM"}
+            onMouseDown={(e) => e.preventDefault()} onClick={() => setAp("PM")}>PM</button>
         </div>
       )}
     </div>

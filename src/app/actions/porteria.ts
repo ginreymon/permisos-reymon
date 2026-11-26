@@ -9,7 +9,7 @@ import { aTitulo, esCargoDirectivo, esCargoPorteria } from "@/lib/colaborador/id
 import { sumarMinutosHora } from "@/lib/colaborador/hora";
 import { cupoDelMes, instanteBogota, type SolicitudCupo } from "@/lib/reglas";
 import {
-  minutosDia, type PortVista, type ResultadoPorteria, type ResultadoLoginPorteria,
+  minutosDia, type PortVista, type ResultadoPorteria,
 } from "@/lib/porteria/vista";
 import type { EmpleadoCoord, ResultadoEmpleado, ResultadoCrearCoord } from "@/app/actions/coordinador";
 import type { EstadoSolicitud, Database } from "@/lib/supabase/database.types";
@@ -108,24 +108,7 @@ export async function estadoPorteria(): Promise<PortVista[] | null> {
   return cargar();
 }
 
-// ── Login / logout ────────────────────────────────────────────────────────────
-export async function iniciarSesion(formData: FormData): Promise<ResultadoLoginPorteria> {
-  const email = String(formData.get("correo") ?? "").trim();
-  const password = String(formData.get("clave") ?? "");
-  if (!email || !password) return { ok: false, error: "Escribe el usuario y la contraseña." };
-
-  const supa = await crearClienteServidor();
-  const { error } = await supa.auth.signInWithPassword({ email, password });
-  if (error) return { ok: false, error: "Usuario o contraseña incorrectos." };
-
-  const { data: rol } = await supa.rpc("mi_rol");
-  if (rol !== "porteria") {
-    await supa.auth.signOut();
-    return { ok: false, error: "Esta cuenta no es de portería." };
-  }
-  return { ok: true };
-}
-
+// ── Logout ────────────────────────────────────────────────────────────────────
 export async function cerrarSesion(): Promise<void> {
   const supa = await crearClienteServidor();
   await supa.auth.signOut();
