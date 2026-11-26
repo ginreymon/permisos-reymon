@@ -35,6 +35,16 @@ export default function Ingreso() {
         <section className="paso on">
           <div className="card">
             <div className="card-h">
+              <span className="ico">📝</span>
+              <div><h3>¿Eres colaborador?</h3><p>Solicita tu permiso con tu cédula, sin cuenta.</p></div>
+            </div>
+            <Link className="btn btn-xl" href="/solicitar" style={{ textDecoration: "none" }}>
+              Solicitar permiso
+            </Link>
+          </div>
+
+          <div className="card">
+            <div className="card-h">
               <span className="ico">🔒</span>
               <div><h3>Ingreso</h3><p>Coordinador, portería o RRHH. Usa el correo del cargo.</p></div>
             </div>
@@ -50,19 +60,9 @@ export default function Ingreso() {
                 onKeyDown={(e) => e.key === "Enter" && entrar()} />
             </div>
             <p className={`err ${errLogin ? "on" : ""}`}>{errLogin}</p>
-            <button className="btn btn-xl" disabled={pending} onClick={entrar}>
+            <button className="btn btn-out btn-xl" disabled={pending} onClick={entrar}>
               {pending ? "Entrando…" : "Entrar"}
             </button>
-          </div>
-
-          <div className="card">
-            <div className="card-h">
-              <span className="ico">📝</span>
-              <div><h3>¿Eres colaborador?</h3><p>Solicita tu permiso con tu cédula, sin cuenta.</p></div>
-            </div>
-            <Link className="btn btn-out btn-xl" href="/solicitar" style={{ textDecoration: "none" }}>
-              Solicitar permiso
-            </Link>
           </div>
         </section>
       </div>
