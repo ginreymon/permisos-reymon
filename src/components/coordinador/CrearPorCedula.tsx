@@ -155,12 +155,6 @@ export default function CrearPorCedula({
     setFecha(valor);
     setSalidaMin((sm) => clampN(sm, salidaMinDe(valor, modo), SALIDA_MAX));
   }
-  function abrirSelectorFecha() {
-    const el = fileFecha.current;
-    if (!el) return;
-    if (el.showPicker) el.showPicker(); else el.click();
-  }
-
   function crear() {
     if (!empleado) return;
     if (!tipo) return setErrForm("Selecciona el tipo de permiso.");
@@ -295,14 +289,17 @@ export default function CrearPorCedula({
               onClick={() => fijarFecha(manana)}>Mañana</button>
           )}
           {permiteOtroDia && (
-            <button type="button" className="chip" role="radio" aria-checked={chipActivo === "otro"}
-              onClick={abrirSelectorFecha}>
+            <span className="chip" role="radio" aria-checked={chipActivo === "otro"}
+              style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
               📅 {chipActivo === "otro" ? fmtFechaCorta(fecha) : "Otro día"}
-            </button>
+              {/* Input date nativo superpuesto: el tap abre el picker del sistema
+                  (showPicker sobre un input oculto no funciona en móvil). */}
+              <input ref={fileFecha} type="date" lang="es-CO" min={fechaMin} value={fecha}
+                aria-label="Elegir otro día"
+                onChange={(e) => e.target.value && fijarFecha(e.target.value)}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0, cursor: "pointer" }} />
+            </span>
           )}
-          <input ref={fileFecha} type="date" lang="es-CO" min={fechaMin} value={fecha}
-            onChange={(e) => e.target.value && fijarFecha(e.target.value)}
-            style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none" }} />
         </div>
         <p className="tiempo-hint">
           {modo === "urgente"
