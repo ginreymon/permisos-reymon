@@ -169,6 +169,11 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
                 <span><b>Aprobación</b><small>Revisar y responder solicitudes</small></span>
               </button>
             </div>
+            <div style={{ marginTop: "auto", padding: 12 }}>
+              <button className="btn btn-out btn-xl" disabled={pending} onClick={salir}>
+                Cerrar sesión
+              </button>
+            </div>
           </aside>
         </div>
       )}
@@ -248,8 +253,6 @@ export default function Coordinador({ estado, tipos }: { estado: EstadoCoordinad
                 ))
               )}
             </div>
-
-            <button className="btn btn-out btn-xl" style={{ marginTop: 16 }} disabled={pending} onClick={salir}>Cerrar sesión</button>
           </section>
         )}
 
