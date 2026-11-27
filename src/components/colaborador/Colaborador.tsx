@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   validarIdentidad, crearPermiso, subirSoporte, refrescarPermisos, salir,
 } from "@/app/actions/colaborador";
@@ -59,6 +60,7 @@ export default function Colaborador({
   const [selId, setSelId] = useState<number | null>(null);
   const [nuevoId, setNuevoId] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   // Identidad
   const [cedula, setCedula] = useState("");
@@ -195,8 +197,7 @@ export default function Colaborador({
   function cerrarSesion() {
     startTransition(async () => {
       await salir();
-      setIdentidad(null); setPermisos([]); setCedula(""); setApellido(""); setHabeas(false);
-      setPaso("identidad");
+      router.push("/"); // vuelve al login principal, no al paso de cédula
     });
   }
 
