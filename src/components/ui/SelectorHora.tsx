@@ -92,10 +92,10 @@ export default function SelectorHora({
         <div className="selhora-ampm" role="group" aria-label="AM o PM">
           <button type="button" className={`selhora-ap ${partes.ap === "AM" ? "on" : ""}`}
             aria-pressed={partes.ap === "AM"}
-            onMouseDown={(e) => e.preventDefault()} onClick={() => setAp("AM")}>AM</button>
+            onPointerDown={(e) => { e.preventDefault(); setAp("AM"); }}>AM</button>
           <button type="button" className={`selhora-ap ${partes.ap === "PM" ? "on" : ""}`}
             aria-pressed={partes.ap === "PM"}
-            onMouseDown={(e) => e.preventDefault()} onClick={() => setAp("PM")}>PM</button>
+            onPointerDown={(e) => { e.preventDefault(); setAp("PM"); }}>PM</button>
         </div>
       )}
     </div>
