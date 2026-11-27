@@ -114,7 +114,7 @@ export default function Porteria({ estado, tipos }: { estado: PortVista[] | null
             <span><b>Registro</b><small>Salidas y regresos del turno</small></span>
           </button>
         </div>
-        <div style={{ marginTop: "auto", padding: 12 }}>
+        <div className="nav-foot">
           <button className="btn btn-out btn-xl" disabled={pending} onClick={salir}>
             Cerrar sesión
           </button>
