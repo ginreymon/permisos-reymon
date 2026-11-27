@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   validarIdentidad, crearPermiso, subirSoporte, refrescarPermisos, salir,
 } from "@/app/actions/colaborador";
-import { cupoDelMes, type SolicitudCupo } from "@/lib/reglas";
+import { cupoDelMes, usadoEnMes, cicloNomina, type SolicitudCupo } from "@/lib/reglas";
 import { fmtDuracion, fmtFechaCorta } from "@/lib/colaborador/formato";
 import { aTitulo } from "@/lib/colaborador/identidad";
 import { fmt12, minutosAHHMM, sumarMinutosHora, limite24hBogota, diaSiguiente } from "@/lib/colaborador/hora";
@@ -124,6 +124,15 @@ export default function Colaborador({
     }));
     return cupoDelMes(pedido, cat.topeMinMes, previas, tipo, fecha, "preview");
   }, [tipo, pedido, fecha, permisos, catalogo]);
+
+  // Suma del tiempo ya aprobado (aprobado + en curso + cerrado) del tipo en el ciclo.
+  const aprobadoPeriodo = useMemo(() => {
+    if (!tipo) return 0;
+    const previas: SolicitudCupo[] = permisos.map((p) => ({
+      tipo: p.tipo, fecha: p.fecha, estado: p.estado, min_cubierto: p.minCubierto,
+    }));
+    return usadoEnMes(previas, tipo, cicloNomina(fecha), "definitivo");
+  }, [tipo, fecha, permisos]);
 
   const exigeSoporte = tipo ? (catalogo.get(tipo)?.exigeSoporte ?? false) : false;
 
@@ -304,7 +313,7 @@ export default function Colaborador({
 
               {cupo && (
                 <div className="nota n-neu" style={{ marginBottom: 16 }}>
-                  <b>Cupo del periodo (25 al 24)</b>Llevas {fmtDuracion(cupo.usado)} en permisos este periodo.
+                  <b>Cupo del periodo (25 al 24)</b>Llevas {fmtDuracion(aprobadoPeriodo)} en permisos este periodo.
                 </div>
               )}
 

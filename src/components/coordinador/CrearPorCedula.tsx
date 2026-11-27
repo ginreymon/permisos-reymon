@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { buscarEmpleadoCoord, crearComoCoordinador, type EmpleadoCoord, type ResultadoEmpleado, type ResultadoCrearCoord } from "@/app/actions/coordinador";
-import { cupoDelMes, type SolicitudCupo } from "@/lib/reglas";
+import { cupoDelMes, usadoEnMes, cicloNomina, type SolicitudCupo } from "@/lib/reglas";
 import { aTitulo } from "@/lib/colaborador/identidad";
 import { fmtDuracion, fmtFechaCorta } from "@/lib/colaborador/formato";
 import { fmt12, minutosAHHMM, sumarMinutosHora, proximoCuartoBogota, diaSiguiente, limite24hBogota } from "@/lib/colaborador/hora";
@@ -133,6 +133,8 @@ export default function CrearPorCedula({
   const cupo = tipo && catSel && catSel.topeMinMes != null
     ? cupoDelMes(durEff, catSel.topeMinMes, previas, tipo, fecha, "preview")
     : null;
+  // Suma del tiempo ya aprobado (aprobado + en curso + cerrado) del tipo en el ciclo.
+  const aprobadoPeriodo = tipo ? usadoEnMes(previas, tipo, cicloNomina(fecha), "definitivo") : 0;
 
   function buscar() {
     const c = cedula.trim();
@@ -263,19 +265,11 @@ export default function CrearPorCedula({
         </select>
       </div>
 
-      {cupo && (() => {
-        const exceso = cupo.personal;
-        const clase = exceso ? "n-amb" : "n-neu";
-        let contenido: React.ReactNode;
-        if (!exceso) {
-          contenido = <><b>Cupo del periodo (25 al 24)</b>Lleva {fmtDuracion(cupo.usado)} de {fmtDuracion(cupo.tope!)}. Le quedan {fmtDuracion(cupo.restante ?? 0)}.</>;
-        } else if (!cupo.cubierto) {
-          contenido = <><b>Cupo agotado</b>Ya usó {fmtDuracion(cupo.tope!)} en este periodo; este permiso queda completo como permiso personal, que sí se descuenta del salario.</>;
-        } else {
-          contenido = <><b>Este permiso se reparte</b>Le queda {fmtDuracion(cupo.restante ?? 0)} de cupo: {fmtDuracion(cupo.cubierto)} en este tipo y {fmtDuracion(exceso)} como permiso personal, que sí se descuenta.</>;
-        }
-        return <div className={`nota ${clase}`} style={{ marginBottom: 16 }}>{contenido}</div>;
-      })()}
+      {cupo && (
+        <div className="nota n-neu" style={{ marginBottom: 16 }}>
+          <b>Cupo del periodo (25 al 24)</b>Lleva {fmtDuracion(aprobadoPeriodo)} en permisos este periodo.
+        </div>
+      )}
 
       <div className="campo">
         <label className="label">Fecha</label>
